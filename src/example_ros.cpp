@@ -29,22 +29,6 @@ int mainWithRos(int argc, char** argv)
   return 0;
 }
 
-int mainWithoutROS(int, char**)
-{
-  // Create a logger with a name
-  auto logger = spdlog::get("my_logger");
-  // Optionally, make this the default logger, accessible globally
-  spdlog::set_default_logger(logger);
-
-  // Log some messages
-  logger->info("Hello, world!");
-  logger->warn("This is a warning!");
-  logger->error("This is an error!");
-  spdlog::info("This message is logged using the default logger");
-
-  return 0;
-}
-
 int main(int argc, char** argv)
 {
   return mainWithRos(argc, argv);

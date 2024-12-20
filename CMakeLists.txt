@@ -9,6 +9,17 @@ endif()
 find_package(ament_cmake QUIET)
 find_package(spdlog REQUIRED)
 
+# ROS Version
+message(STATUS "ROS_VERSION precheck: ENV{ROS_VERSION}=$ENV{ROS_VERSION} ROS_VERSION=${ROS_VERSION} CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
+if(DEFINED CMAKE_PREFIX_PATH AND "${CMAKE_PREFIX_PATH}" STREQUAL "/opt/ros/humble")
+  set(ROS_VERSION 2)
+endif()
+if(NOT DEFINED ROS_VERSION AND DEFINED ENV{ROS_VERSION})
+  set(ROS_VERSION $ENV{ROS_VERSION})
+endif()
+message(STATUS "ROS_VERSION=${ROS_VERSION}")
+add_compile_options(-D__ROS_VERSION=${ROS_VERSION})
+
 if ( ament_cmake_FOUND )
 
   add_definitions( -DUSING_ROS2 )
@@ -20,7 +31,7 @@ if ( ament_cmake_FOUND )
   find_package(rcl_interfaces REQUIRED)
   find_package(spdlog_vendor REQUIRED)
 
-  add_library(${PROJECT_NAME} src/ros2_sink.cpp)
+  add_library(${PROJECT_NAME} src/ros2_sink.cpp include/spdlog_ros/logging_macros.hpp include/spdlog_ros/ros_get_time_point.h include/spdlog_ros/get_time_point.h)
 
   target_link_libraries(${PROJECT_NAME}
     spdlog::spdlog
@@ -68,7 +79,7 @@ else()
 
   include_directories(${catkin_INCLUDE_DIRS})
 
-  add_library(${PROJECT_NAME} src/ros_sink.cpp)
+  add_library(${PROJECT_NAME} src/ros_sink.cpp include/spdlog_ros/logging_macros.hpp include/spdlog_ros/logging.hpp include/spdlog_ros/ros2_get_time_point.h include/spdlog_ros/get_time_point.h)
   
   target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
