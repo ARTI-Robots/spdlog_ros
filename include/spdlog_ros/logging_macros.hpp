@@ -29,7 +29,7 @@
 #define SPDLOG_ROS_LEVEL_INFO spdlog::level::info
 #define SPDLOG_ROS_LEVEL_WARN spdlog::level::warn
 #define SPDLOG_ROS_LEVEL_ERROR spdlog::level::err
-#define SPDLOG_ROS_LEVEL_CRITICAL spdlog::level::critical
+#define SPDLOG_ROS_LEVEL_FATAL spdlog::level::critical
 
 /// Convenience macro to convert milliseconds to nanoseconds.
 #define SPDLOG_ROS_UTILS_MS_TO_NS(milliseconds) ((milliseconds) * (1000LL * 1000LL))
@@ -71,10 +71,10 @@
 #define SPDLOG_ROS_UTILS_CAST_DURATION(x) ((spdlog_ros_utils_duration_value_t)x)
 #endif
 
-// The SPDLOG_ROS_UTILS_LOG_COND_NAMED macro is surrounded by do { .. } while (0) to implement
+// The SPDLOG_ROS_UTILS_LOG_COND macro is surrounded by do { .. } while (0) to implement
 // the standard C macro idiom to make the macro safe in all contexts; see
 // http://c-faq.com/cpp/multistmt.html for more information.
-#define SPDLOG_ROS_UTILS_LOG_COND_NAMED(severity, condition_before, condition_after, name, ...) \
+#define SPDLOG_ROS_UTILS_LOG_COND(severity, condition_before, condition_after, ...) \
   do { \
       condition_before \
       SPDLOG_LOGGER_CALL(spdlog::default_logger_raw(), severity, __VA_ARGS__); \
@@ -198,87 +198,45 @@
 ///@}
 
 # define SPDLOG_ROS_UTILS_LOG(severity, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_EMPTY, SPDLOG_ROS_CONDITION_EMPTY, NULL, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_NAMED(severity, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_EMPTY, SPDLOG_ROS_CONDITION_EMPTY, name, \
+    SPDLOG_ROS_CONDITION_EMPTY, SPDLOG_ROS_CONDITION_EMPTY, \
     __VA_ARGS__)
 
 # define SPDLOG_ROS_UTILS_LOG_ONCE(severity, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_ONCE_BEFORE, SPDLOG_ROS_CONDITION_ONCE_AFTER, NULL, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_ONCE_NAMED(severity, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_ONCE_BEFORE, SPDLOG_ROS_CONDITION_ONCE_AFTER, name, \
+    SPDLOG_ROS_CONDITION_ONCE_BEFORE, SPDLOG_ROS_CONDITION_ONCE_AFTER, \
     __VA_ARGS__)
 
 # define SPDLOG_ROS_UTILS_LOG_EXPRESSION(severity, expression, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_EXPRESSION_BEFORE(expression), SPDLOG_ROS_CONDITION_EXPRESSION_AFTER, NULL, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_EXPRESSION_NAMED(severity, expression, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_EXPRESSION_BEFORE(expression), SPDLOG_ROS_CONDITION_EXPRESSION_AFTER, name, \
+    SPDLOG_ROS_CONDITION_EXPRESSION_BEFORE(expression), SPDLOG_ROS_CONDITION_EXPRESSION_AFTER, \
     __VA_ARGS__)
 
 # define SPDLOG_ROS_UTILS_LOG_FUNCTION(severity, function, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_FUNCTION_BEFORE(function), SPDLOG_ROS_CONDITION_FUNCTION_AFTER, NULL, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_FUNCTION_NAMED(severity, function, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_FUNCTION_BEFORE(function), SPDLOG_ROS_CONDITION_FUNCTION_AFTER, name, \
+    SPDLOG_ROS_CONDITION_FUNCTION_BEFORE(function), SPDLOG_ROS_CONDITION_FUNCTION_AFTER, \
     __VA_ARGS__)
 
 # define SPDLOG_ROS_UTILS_LOG_SKIPFIRST(severity, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, NULL, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_SKIPFIRST_NAMED(severity, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, name, \
+    SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, \
     __VA_ARGS__)
 
 # define SPDLOG_ROS_UTILS_LOG_THROTTLE(severity, get_time_point_value, duration, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration), SPDLOG_ROS_CONDITION_THROTTLE_AFTER, NULL, \
+    SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration), SPDLOG_ROS_CONDITION_THROTTLE_AFTER, \
     __VA_ARGS__)
 
 # define SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE(severity, get_time_point_value, duration, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
+  SPDLOG_ROS_UTILS_LOG_COND( \
     severity, \
-    SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration) SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_THROTTLE_AFTER SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, NULL, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_THROTTLE_NAMED(severity, get_time_point_value, duration, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration), SPDLOG_ROS_CONDITION_THROTTLE_AFTER, name, \
-    __VA_ARGS__)
-
-# define SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE_NAMED(severity, get_time_point_value, duration, name, ...) \
-  SPDLOG_ROS_UTILS_LOG_COND_NAMED( \
-    severity, \
-    SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration) SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_THROTTLE_AFTER SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, name, \
+    SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration) SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_THROTTLE_AFTER SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, \
     __VA_ARGS__)
 
 
@@ -435,6 +393,24 @@
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_STREAM_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM
+ * Log a message with severity DEBUG.
+ * \param name name of the logger prepended to the message
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_NAMED(severity, name, stream_arg) \
+  do { \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG(                   \
+      severity, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_STREAM_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -451,6 +427,25 @@
     SPDLOG_ROS_UTILS_LOG_ONCE( \
       severity, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_STREAM_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM_ONCE
+ * Log a message with severity DEBUG with the following conditions:
+ * All subsequent log calls except the first one are being ignored.
+ * \param name name of the logger prepended to the message
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_ONCE_NAMED(severity, name, stream_arg) \
+  do { \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG_ONCE( \
+      severity, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_EXPRESSION macro is surrounded by do { .. } while (0)
@@ -473,6 +468,27 @@
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM_EXPRESSION
+ * Log a message with severity DEBUG with the following conditions:
+ * Log calls are being ignored when the expression evaluates to false.
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(severity, expression, name, stream_arg) \
+  do { \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
+      severity, \
+      expression, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -493,6 +509,27 @@
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM_FUNCTION
+ * Log a message with severity DEBUG with the following conditions:
+ * Log calls are being ignored when the function returns false.
+ * \param name name of the logger prepended to the message
+ * \param function The functions return value determines if the message should be logged
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(severity, function, name, stream_arg) \
+  do { \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG_FUNCTION( \
+      severity, \
+      function, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -509,6 +546,25 @@
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
       severity, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST
+ * Log a message with severity DEBUG with the following conditions:
+ * The first log call is being ignored but all subsequent calls are being processed.
+ * \param name name of the logger prepended to the message
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_NAMED(severity, name, stream_arg) \
+  do { \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
+      severity, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_THROTTLE macro is surrounded by do { .. } while (0)
@@ -534,6 +590,30 @@
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM_THROTTLE
+ * Log a message with severity DEBUG with the following conditions:
+ * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
+ * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(severity, clock, duration, name, stream_arg) \
+  do { \
+    GET_TIME_POINT(clock) \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG_THROTTLE( \
+      severity, \
+      get_time_point, \
+      duration, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -556,6 +636,31 @@
       get_time_point, \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with severity DEBUG with the following conditions:
+ * The first log call is being ignored but all subsequent calls are being processed.
+ * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
+ * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
+ * \param stream_arg The argument << into a stringstream
+ */
+#define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(severity, clock, duration, name, stream_arg) \
+  do { \
+    GET_TIME_POINT(clock) \
+    std::stringstream spllog_ros_stream_ss_; \
+    spllog_ros_stream_ss_ << stream_arg; \
+    SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
+      severity, \
+      get_time_point, \
+      duration, \
+      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 ///@}
