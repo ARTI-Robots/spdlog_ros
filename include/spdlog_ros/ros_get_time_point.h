@@ -14,7 +14,7 @@ typedef uint64_t spdlog_ros_utils_ret_t;
 #define GET_TIME_POINT(clock) \
     auto get_time_point = [](spdlog_ros_utils_time_point_value_t * time_point) -> spdlog_ros_utils_ret_t { \
       try { \
-        *time_point = ros::Time::now().toNSec(); \
+        *time_point = clock::now().toNSec(); \
       } catch (...) { \
         return SPDLOG_ROS_UTILS_RET_ERROR; \
       } \

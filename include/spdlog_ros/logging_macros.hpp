@@ -338,7 +338,7 @@
  * \def SPDLOG_ROS_GENERAL_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
@@ -361,7 +361,7 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
@@ -574,7 +574,7 @@
  * \def SPDLOG_ROS_GENERAL_STREAM_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
@@ -597,7 +597,7 @@
  * \def SPDLOG_ROS_GENERAL_STREAM_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
@@ -622,7 +622,7 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
@@ -646,7 +646,7 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
+ * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
