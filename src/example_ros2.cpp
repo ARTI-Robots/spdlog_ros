@@ -1,19 +1,29 @@
-#include "spdlog_ros/ros2_sink.hpp"
+#include <spdlog_ros/logger.hpp>
 #include <spdlog_ros/logging.hpp>
+#include "spdlog_ros/ros2_sink.hpp"
 
 int mainWithRos(int argc, char** argv)
 {
-
   rclcpp::init(argc, argv);
 
   // Create a ROS2 node
   auto node = rclcpp::Node::make_shared("spdlog_ros_example");
+
+  // Set the root logger name, all loggers will be prefixed with this name (e.g. your ros node name)
+  // If none is set, the logger name is directly the full logger name given at creation
+  // Note that this should happen before all other calls to spdlog_ros such that the file name for logging
+  // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
+  spdlog_ros::SetRootLoggerName("my_logger_root");
+
   // Using ROS is optional
   auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
 
+  // The default sinks are stdout/stderr and file logging
+  // When adding here a default sink, all other loggers will have that sink
+  spdlog_ros::AddSinkToDefaultSinks(ros_sink);
+
   // Create an async logger that logs to the console and ROS2
-  auto logger = spdlog_ros::CreateAsyncLogger("my_logger", {ros_sink});
-  logger->set_level(SPDLOG_ROS_LEVEL_DEBUG);
+  auto logger = spdlog_ros::CreateAsyncLogger("my_logger");
   // Optionally, make this the default logger, accessible globally
   spdlog::set_default_logger(logger);
 

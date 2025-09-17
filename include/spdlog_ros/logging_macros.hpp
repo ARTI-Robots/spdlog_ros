@@ -23,6 +23,7 @@
 #define SPDLOG_ROS_LOGGING_MACROS_HPP
 
 #include "spdlog/spdlog.h"
+#include <spdlog_ros/logger.hpp>
 #include <spdlog_ros/get_time_point.h>
 
 #define SPDLOG_ROS_LEVEL_DEBUG spdlog::level::debug
@@ -74,10 +75,10 @@
 // The SPDLOG_ROS_UTILS_LOG_COND macro is surrounded by do { .. } while (0) to implement
 // the standard C macro idiom to make the macro safe in all contexts; see
 // http://c-faq.com/cpp/multistmt.html for more information.
-#define SPDLOG_ROS_UTILS_LOG_COND(severity, condition_before, condition_after, ...) \
+#define SPDLOG_ROS_UTILS_LOG_COND(name, severity, condition_before, condition_after, ...) \
   do { \
       condition_before \
-      SPDLOG_LOGGER_CALL(spdlog::default_logger_raw(), severity, __VA_ARGS__); \
+      SPDLOG_LOGGER_CALL((spdlog_ros::GetLogger(name)), severity, __VA_ARGS__); \
       condition_after \
   } while (0)
 ///@{
@@ -197,44 +198,51 @@
 }
 ///@}
 
-# define SPDLOG_ROS_UTILS_LOG(severity, ...) \
+# define SPDLOG_ROS_UTILS_LOG(name, severity, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_EMPTY, SPDLOG_ROS_CONDITION_EMPTY, \
     __VA_ARGS__)
 
-# define SPDLOG_ROS_UTILS_LOG_ONCE(severity, ...) \
+# define SPDLOG_ROS_UTILS_LOG_ONCE(name, severity, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_ONCE_BEFORE, SPDLOG_ROS_CONDITION_ONCE_AFTER, \
     __VA_ARGS__)
 
-# define SPDLOG_ROS_UTILS_LOG_EXPRESSION(severity, expression, ...) \
+# define SPDLOG_ROS_UTILS_LOG_EXPRESSION(name, severity, expression, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_EXPRESSION_BEFORE(expression), SPDLOG_ROS_CONDITION_EXPRESSION_AFTER, \
     __VA_ARGS__)
 
-# define SPDLOG_ROS_UTILS_LOG_FUNCTION(severity, function, ...) \
+# define SPDLOG_ROS_UTILS_LOG_FUNCTION(name, severity, function, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_FUNCTION_BEFORE(function), SPDLOG_ROS_CONDITION_FUNCTION_AFTER, \
     __VA_ARGS__)
 
-# define SPDLOG_ROS_UTILS_LOG_SKIPFIRST(severity, ...) \
+# define SPDLOG_ROS_UTILS_LOG_SKIPFIRST(name, severity, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, \
     __VA_ARGS__)
 
-# define SPDLOG_ROS_UTILS_LOG_THROTTLE(severity, get_time_point_value, duration, ...) \
+# define SPDLOG_ROS_UTILS_LOG_THROTTLE(name, severity, get_time_point_value, duration, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration), SPDLOG_ROS_CONDITION_THROTTLE_AFTER, \
     __VA_ARGS__)
 
-# define SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE(severity, get_time_point_value, duration, ...) \
+# define SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE(name, severity, get_time_point_value, duration, ...) \
   SPDLOG_ROS_UTILS_LOG_COND( \
+    name, \
     severity, \
     SPDLOG_ROS_CONDITION_THROTTLE_BEFORE(get_time_point_value, duration) SPDLOG_ROS_CONDITION_SKIPFIRST_BEFORE, SPDLOG_ROS_CONDITION_THROTTLE_AFTER SPDLOG_ROS_CONDITION_SKIPFIRST_AFTER, \
     __VA_ARGS__)
@@ -255,6 +263,7 @@
 #define SPDLOG_ROS_GENERAL(severity, ...) \
   do { \
     SPDLOG_ROS_UTILS_LOG( \
+       "", \
        severity, \
       __VA_ARGS__); \
   } while (0)
@@ -272,6 +281,7 @@
 #define SPDLOG_ROS_GENERAL_ONCE(severity, ...) \
   do { \
     SPDLOG_ROS_UTILS_LOG_ONCE(     \
+      "", \
       severity, \
       __VA_ARGS__); \
   } while (0)
@@ -290,6 +300,7 @@
 #define SPDLOG_ROS_GENERAL_EXPRESSION(severity, expression, ...) \
   do { \
     SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
+      "", \
       severity, \
       expression, \
       __VA_ARGS__); \
@@ -309,6 +320,7 @@
 #define SPDLOG_ROS_GENERAL_FUNCTION(severity, function, ...) \
   do { \
     SPDLOG_ROS_UTILS_LOG_FUNCTION( \
+      "", \
       severity, \
       function, \
       __VA_ARGS__); \
@@ -327,6 +339,7 @@
 #define SPDLOG_ROS_GENERAL_SKIPFIRST(severity, ...) \
   do { \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
+      "", \
       severity, \
       __VA_ARGS__); \
   } while (0)
@@ -347,6 +360,7 @@
   do { \
     GET_TIME_POINT(clock) \
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
+      "", \
       severity, \
       get_time_point, \
       duration, \
@@ -370,6 +384,7 @@
   do { \
     GET_TIME_POINT(clock) \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
+      "", \
       severity, \
       get_time_point, \
       duration, \
@@ -389,6 +404,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG(                   \
+      "", \
       severity, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -407,8 +423,9 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG(                   \
+      name, \
       severity, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_ONCE macro is surrounded by do { .. } while (0)
@@ -425,6 +442,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_ONCE( \
+      "", \
       severity, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -444,8 +462,9 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_ONCE( \
+      name, \
       severity, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_EXPRESSION macro is surrounded by do { .. } while (0)
@@ -463,6 +482,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
+      "", \
       severity, \
       expression, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
@@ -484,9 +504,10 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
+      name, \
       severity, \
       expression, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
@@ -504,6 +525,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_FUNCTION( \
+      "", \
       severity, \
       function, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
@@ -525,9 +547,10 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_FUNCTION( \
+      name, \
       severity, \
       function, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
@@ -544,6 +567,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
+      "", \
       severity, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -563,8 +587,9 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
+      name, \
       severity, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_THROTTLE macro is surrounded by do { .. } while (0)
@@ -584,6 +609,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
+      "", \
       severity, \
       get_time_point, \
       duration, \
@@ -608,10 +634,11 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
+      name, \
       severity, \
       get_time_point, \
       duration, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 // The SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
@@ -632,6 +659,7 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
+      "", \
       severity, \
       get_time_point, \
       duration, \
@@ -657,10 +685,11 @@
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
+      name, \
       severity, \
       get_time_point, \
       duration, \
-      "[{}]: {}", name, spllog_ros_stream_ss_.str().c_str()); \
+      "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
 
 ///@}

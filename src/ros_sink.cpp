@@ -9,19 +9,6 @@
 namespace spdlog_ros
 {
 
-std::shared_ptr<spdlog::logger> CreateAsyncLogger(const std::string& name, std::vector<spdlog::sink_ptr> sinks)
-{
-  static auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-  static bool oninit = true;
-  if(oninit)
-  {
-    spdlog::init_thread_pool(32768, 1); // queue with max 32k items 1 backing thread.
-    oninit = false;
-  }
-  sinks.push_back(console_sink);
-  return std::make_shared<spdlog::async_logger>(name, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
-}
-
 RosSink::~RosSink() {}
 
 //Pimpl idiom

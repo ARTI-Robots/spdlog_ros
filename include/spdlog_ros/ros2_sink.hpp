@@ -1,7 +1,6 @@
 #pragma once
 
 #include "spdlog/sinks/sink.h"
-#include "spdlog/logger.h"
 #include "rclcpp/rclcpp.hpp"
 
 namespace spdlog_ros
@@ -30,8 +29,5 @@ private:
   struct Pimpl;
   std::unique_ptr<Pimpl> pimpl_;
 };
-
-
-std::shared_ptr<spdlog::logger> CreateAsyncLogger(const std::string& name, std::vector<spdlog::sink_ptr> sinks = {});
 
 }  // namespace spdlog_ros
