@@ -17,7 +17,7 @@ struct RosSink::Pimpl
 {
     rclcpp::Node::SharedPtr node;
     rclcpp::Publisher<rcl_interfaces::msg::Log>::SharedPtr log_publisher;
-     std::mutex mutex;
+    std::mutex mutex;
 
     RCUTILS_LOG_SEVERITY convertSeverityToROS(spdlog::level::level_enum level)
     {

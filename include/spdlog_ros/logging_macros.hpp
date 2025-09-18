@@ -351,18 +351,16 @@
  * \def SPDLOG_ROS_GENERAL_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_GENERAL_THROTTLE(severity, clock, duration, ...) \
+#define SPDLOG_ROS_GENERAL_THROTTLE(severity, duration, ...) \
   do { \
-    GET_TIME_POINT(clock) \
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
       "", \
       severity, \
-      get_time_point, \
+      spdlog_ros::GetTimePointCallback(), \
       duration, \
       __VA_ARGS__); \
   } while (0)
@@ -375,18 +373,16 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(severity, clock, duration, ...) \
+#define SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(severity, duration, ...) \
   do { \
-    GET_TIME_POINT(clock) \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
       "", \
       severity, \
-      get_time_point, \
+      spdlog_ros::GetTimePointCallback(), \
       duration, \
       __VA_ARGS__); \
   } while (0)
@@ -599,19 +595,17 @@
  * \def SPDLOG_ROS_GENERAL_STREAM_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_GENERAL_STREAM_THROTTLE(severity, clock, duration, stream_arg) \
+#define SPDLOG_ROS_GENERAL_STREAM_THROTTLE(severity, duration, stream_arg) \
   do { \
-    GET_TIME_POINT(clock) \
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
       "", \
       severity, \
-      get_time_point, \
+      spdlog_ros::GetTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -623,20 +617,18 @@
  * \def SPDLOG_ROS_GENERAL_STREAM_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(severity, clock, duration, name, stream_arg) \
+#define SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(severity, duration, name, stream_arg) \
   do { \
-    GET_TIME_POINT(clock) \
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
       name, \
       severity, \
-      get_time_point, \
+      spdlog_ros::GetTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -649,19 +641,17 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(severity, clock, duration, stream_arg) \
+#define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(severity, duration, stream_arg) \
   do { \
-    GET_TIME_POINT(clock) \
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
       "", \
       severity, \
-      get_time_point, \
+      spdlog_ros::GetTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -674,20 +664,18 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock (ROS2) or ros::Time/ros::WallTime (ROS1) that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(severity, clock, duration, name, stream_arg) \
+#define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(severity, duration, name, stream_arg) \
   do { \
-    GET_TIME_POINT(clock) \
     std::stringstream spllog_ros_stream_ss_; \
     spllog_ros_stream_ss_ << stream_arg; \
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
       name, \
       severity, \
-      get_time_point, \
+      spdlog_ros::GetTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
