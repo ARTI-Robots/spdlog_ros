@@ -1,7 +1,8 @@
-#include <spdlog_ros/logger.hpp>
-#include <spdlog_ros/logging.hpp>
-#include <spdlog_ros/ros2_sink.hpp>
-#include <spdlog_ros/ros2_get_time_point.h>
+#include <rclcpp/rclcpp.hpp>
+#include <spdlog/spdlog.h>
+#include "spdlog_ros/logger.hpp"
+#include "spdlog_ros/logging.hpp"
+#include "spdlog_ros/ros2_logging.hpp"
 
 int mainWithRos(int argc, char** argv)
 {
@@ -16,20 +17,41 @@ int mainWithRos(int argc, char** argv)
   // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
   spdlog_ros::SetRootLoggerName("my_logger_root");
 
-  // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
-  spdlog_ros::UseROSTime(node->get_clock());
+  // Set up ROS logging
+  spdlog_ros::SetUpROSLogging(node);
 
-  // Using ROS is optional
-  auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
+  // As an alternative to the above two calls, one could also do the following manually here:
 
-  // The default sinks are stdout/stderr and file logging
-  // When adding here a default sink, all other loggers will have that sink
-  spdlog_ros::AddSinkToDefaultSinks(ros_sink);
+  // // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
+  // spdlog_ros::UseROSTime(node->get_clock());
 
-  // Create an async logger that logs to the console and ROS2
-  auto logger = spdlog_ros::CreateAsyncLogger("my_logger");
-  // Optionally, make this the default logger, accessible globally
-  spdlog::set_default_logger(logger);
+  // // Using ROS is optional
+  // auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
+
+  // // The default sinks are stdout/stderr and file logging
+  // // When adding here a default sink, all other loggers will have that sink
+  // spdlog_ros::AddSinkToDefaultSinks(ros_sink);
+
+  // A logger can be created manually although not recommended and required because the SPDLOG_ROS_* macros
+  // create loggers on the fly when used with a new logger name
+
+  // // Create an async logger that logs to the console, file and ROS (note that the logger name is prefixed
+  // // with the root logger name)
+  // auto logger = spdlog_ros::CreateAsyncLogger("my_logger");
+  // // if one wants to use this logger everywhere, it needs to be registered to spdlog because
+  // // otherwise the macros won't find it
+  // spdlog::register_logger(logger);
+  // // Optionally, make this the default logger, accessible globally (registering is not required then)
+  // spdlog::set_default_logger(logger);
+
+  // // Log some messages
+  // logger->info("Hello, world!");
+  // logger->warn("This is a warning!");
+  // logger->error("This is an error!");
+  // spdlog::info("This message is logged using the default logger");
+
+  RCLCPP_INFO(node->get_logger(), "This info is logged using ROS logging");
+  RCLCPP_ERROR(node->get_logger(), "This error is logged using ROS logging");
 
   SPDLOG_ROS_DEBUG("debug message");
 

@@ -14,41 +14,41 @@ RosSink::~RosSink() {}
 //Pimpl idiom
 struct RosSink::Pimpl
 {
-    ros::Publisher log_publisher;
-    std::mutex mutex;
+  ros::Publisher log_publisher;
+  std::mutex mutex;
 
-    int8_t convertSeverityToROS(spdlog::level::level_enum level)
+  int8_t convertSeverityToROS(spdlog::level::level_enum level)
+  {
+    switch (level)
     {
-        switch (level)
-        {
-        case spdlog::level::trace:
-            return rosgraph_msgs::Log::DEBUG;
-        case spdlog::level::debug:
-            return rosgraph_msgs::Log::DEBUG;
-        case spdlog::level::info:
-            return rosgraph_msgs::Log::INFO;
-        case spdlog::level::warn:
-            return rosgraph_msgs::Log::WARN;
-        case spdlog::level::err:
-            return rosgraph_msgs::Log::ERROR;
-        case spdlog::level::critical:
-            return rosgraph_msgs::Log::FATAL;
-        default:
-            return 0;
-        }
+    case spdlog::level::trace:
+        return rosgraph_msgs::Log::DEBUG;
+    case spdlog::level::debug:
+        return rosgraph_msgs::Log::DEBUG;
+    case spdlog::level::info:
+        return rosgraph_msgs::Log::INFO;
+    case spdlog::level::warn:
+        return rosgraph_msgs::Log::WARN;
+    case spdlog::level::err:
+        return rosgraph_msgs::Log::ERROR;
+    case spdlog::level::critical:
+        return rosgraph_msgs::Log::FATAL;
+    default:
+        return 0;
     }
+  }
 };
 
 RosSink::RosSink(ros::NodeHandle& node): pimpl_(std::make_unique<Pimpl>())
 {
-    pimpl_->log_publisher = node.advertise<rosgraph_msgs::Log>("rosout", 10);
+  pimpl_->log_publisher = node.advertise<rosgraph_msgs::Log>("rosout", 10);
 }
 
 
 void RosSink::log(const spdlog::details::log_msg& msg)
 {
   std::lock_guard<std::mutex> lock(pimpl_->mutex);
-    
+
   // Publish the log message
   rosgraph_msgs::Log log_msg;
 
@@ -58,7 +58,7 @@ void RosSink::log(const spdlog::details::log_msg& msg)
   auto sec = msg.time.time_since_epoch().count() / 1000000000;
   auto nsec = msg.time.time_since_epoch().count() % 1000000000;
   log_msg.header.stamp = ros::Time(sec, nsec);
-  
+
   if(msg.source.filename)
   {
     log_msg.file = msg.source.filename;

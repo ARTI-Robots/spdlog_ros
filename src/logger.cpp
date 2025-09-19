@@ -150,7 +150,7 @@ std::shared_ptr<spdlog::logger> GetLogger(const std::string& name, bool create_i
   std::shared_ptr<spdlog::logger> logger = spdlog::get(GetFullLoggerName(name));
   if (logger == nullptr && create_if_not_existing)
   {
-    auto logger = spdlog_ros::CreateAsyncLogger(name, {}, add_default_sinks);
+    logger = spdlog_ros::CreateAsyncLogger(name, {}, add_default_sinks);
     spdlog::register_logger(logger);
     return logger;
   }

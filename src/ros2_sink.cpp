@@ -15,45 +15,45 @@ RosSink::~RosSink() {}
 //Pimpl idiom
 struct RosSink::Pimpl
 {
-    rclcpp::Node::SharedPtr node;
-    rclcpp::Publisher<rcl_interfaces::msg::Log>::SharedPtr log_publisher;
-    std::mutex mutex;
+  rclcpp::Node::SharedPtr node;
+  rclcpp::Publisher<rcl_interfaces::msg::Log>::SharedPtr log_publisher;
+  std::mutex mutex;
 
-    RCUTILS_LOG_SEVERITY convertSeverityToROS(spdlog::level::level_enum level)
+  RCUTILS_LOG_SEVERITY convertSeverityToROS(spdlog::level::level_enum level)
+  {
+    switch (level)
     {
-        switch (level)
-        {
-        case spdlog::level::trace:
-            return RCUTILS_LOG_SEVERITY_DEBUG;
-        case spdlog::level::debug:
-            return RCUTILS_LOG_SEVERITY_DEBUG;
-        case spdlog::level::info:
-            return RCUTILS_LOG_SEVERITY_INFO;
-        case spdlog::level::warn:
-            return RCUTILS_LOG_SEVERITY_WARN;
-        case spdlog::level::err:
-            return RCUTILS_LOG_SEVERITY_ERROR;
-        case spdlog::level::critical:
-            return RCUTILS_LOG_SEVERITY_FATAL;
-        case spdlog::level::off:
-            return RCUTILS_LOG_SEVERITY_UNSET;
-        default:
-            return RCUTILS_LOG_SEVERITY_UNSET;
-        }
+    case spdlog::level::trace:
+        return RCUTILS_LOG_SEVERITY_DEBUG;
+    case spdlog::level::debug:
+        return RCUTILS_LOG_SEVERITY_DEBUG;
+    case spdlog::level::info:
+        return RCUTILS_LOG_SEVERITY_INFO;
+    case spdlog::level::warn:
+        return RCUTILS_LOG_SEVERITY_WARN;
+    case spdlog::level::err:
+        return RCUTILS_LOG_SEVERITY_ERROR;
+    case spdlog::level::critical:
+        return RCUTILS_LOG_SEVERITY_FATAL;
+    case spdlog::level::off:
+        return RCUTILS_LOG_SEVERITY_UNSET;
+    default:
+        return RCUTILS_LOG_SEVERITY_UNSET;
     }
+  }
 };
 
 RosSink::RosSink(rclcpp::Node::SharedPtr node): pimpl_(std::make_unique<Pimpl>())
 {
-    pimpl_->node = node;
-    pimpl_->log_publisher = pimpl_->node->create_publisher<rcl_interfaces::msg::Log>("rosout", rclcpp::RosoutQoS());
+  pimpl_->node = node;
+  pimpl_->log_publisher = pimpl_->node->create_publisher<rcl_interfaces::msg::Log>("rosout", rclcpp::RosoutQoS());
 }
 
 
 void RosSink::log(const spdlog::details::log_msg& msg)
 {
   std::lock_guard<std::mutex> lock(pimpl_->mutex);
-    
+
   // Publish the log message
   rcl_interfaces::msg::Log log_msg;
 
@@ -62,7 +62,7 @@ void RosSink::log(const spdlog::details::log_msg& msg)
   log_msg.msg = fmt::format("{}", msg.payload);
   log_msg.stamp.sec = msg.time.time_since_epoch().count() / 1000000000;
   log_msg.stamp.nanosec = msg.time.time_since_epoch().count() % 1000000000;
-  
+
   if(msg.source.filename)
   {
     log_msg.file = msg.source.filename;
