@@ -3,8 +3,8 @@
 #include "rosgraph_msgs/Log.h"
 
 #include "spdlog/spdlog.h"
-#include "spdlog/async.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+
+#include "spdlog_ros/ros_utils.hpp"
 
 namespace spdlog_ros
 {
@@ -16,43 +16,22 @@ struct RosSink::Pimpl
 {
   ros::Publisher log_publisher;
   std::mutex mutex;
-
-  int8_t convertSeverityToROS(spdlog::level::level_enum level)
-  {
-    switch (level)
-    {
-    case spdlog::level::trace:
-        return rosgraph_msgs::Log::DEBUG;
-    case spdlog::level::debug:
-        return rosgraph_msgs::Log::DEBUG;
-    case spdlog::level::info:
-        return rosgraph_msgs::Log::INFO;
-    case spdlog::level::warn:
-        return rosgraph_msgs::Log::WARN;
-    case spdlog::level::err:
-        return rosgraph_msgs::Log::ERROR;
-    case spdlog::level::critical:
-        return rosgraph_msgs::Log::FATAL;
-    default:
-        return 0;
-    }
-  }
 };
 
 RosSink::RosSink(ros::NodeHandle& node): pimpl_(std::make_unique<Pimpl>())
 {
-  pimpl_->log_publisher = node.advertise<rosgraph_msgs::Log>("rosout", 10);
+  pimpl_->log_publisher = node.advertise<rosgraph_msgs::Log>("/rosout", 10);
 }
 
 
 void RosSink::log(const spdlog::details::log_msg& msg)
 {
-  std::lock_guard<std::mutex> lock(pimpl_->mutex);
+  const std::lock_guard<std::mutex> lock(pimpl_->mutex);
 
   // Publish the log message
   rosgraph_msgs::Log log_msg;
 
-  log_msg.level = pimpl_->convertSeverityToROS(msg.level);
+  log_msg.level = spdlog_ros::ConvertSeverityToROS(msg.level);
   log_msg.name = fmt::format("{}", msg.logger_name);
   log_msg.msg = fmt::format("{}", msg.payload);
   auto sec = msg.time.time_since_epoch().count() / 1000000000;

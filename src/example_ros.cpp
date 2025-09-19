@@ -18,7 +18,7 @@ int mainWithRos(int argc, char** argv)
   spdlog_ros::SetRootLoggerName("my_logger_root");
 
   // Set up ROS logging
-  spdlog_ros::SetUpROSLogging(node);
+  spdlog_ros::SetUpROSLogging();
 
   // As an alternative to the above two calls, one could also do the following manually here:
 

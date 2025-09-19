@@ -2,6 +2,8 @@
 
 #include <chrono>
 #include <ctime>
+#include <unordered_map>
+#include <mutex>
 
 #include "spdlog/spdlog.h"
 #include "spdlog/async.h"
@@ -142,18 +144,42 @@ std::shared_ptr<spdlog::logger> CreateAsyncLogger(const std::string& name, std::
     spdlog::async_overflow_policy::overrun_oldest);
 }
 
+std::mutex& GetLoggerMapMutex()
+{
+  // Use a regular mutex instead of a read-write mutex because a read-write mutex
+  // is not available in C++11 standard library and in practice it should not make a
+  // difference because the read-operation are just short and waiting should not be a 
+  // big issue and the write-operations are rare.
+  static std::mutex logger_map_mutex;
+  return logger_map_mutex;
+}
+
+std::unordered_map<std::string, std::shared_ptr<spdlog::logger>>& GetLoggerMap()
+{
+  static std::unordered_map<std::string, std::shared_ptr<spdlog::logger>> logger_map;
+  return logger_map;
+}
+
 std::shared_ptr<spdlog::logger> GetLogger(const std::string& name, bool create_if_not_existing, bool add_default_sinks)
 {
-  // Note that according to the spdlog documentation, get() is thread-safe but might slow down execution because
-  // of mutex locking:
-  // https://github.com/gabime/spdlog/wiki/Creating-loggers#accessing-loggers-using-spdlogget
-  std::shared_ptr<spdlog::logger> logger = spdlog::get(GetFullLoggerName(name));
-  if (logger == nullptr && create_if_not_existing)
+  std::shared_ptr<spdlog::logger> logger = nullptr;
+
+  const std::lock_guard<std::mutex> lock(GetLoggerMapMutex());
+
+  const std::string full_logger_name = GetFullLoggerName(name);
+  
+  const auto logger_search_it = GetLoggerMap().find(full_logger_name);
+  if (logger_search_it != GetLoggerMap().end())
+  {
+    logger = logger_search_it->second;
+  }
+  else if (create_if_not_existing)
   {
     logger = spdlog_ros::CreateAsyncLogger(name, {}, add_default_sinks);
     spdlog::register_logger(logger);
-    return logger;
+    GetLoggerMap()[full_logger_name] = logger;
   }
+
   return logger;
 }
 

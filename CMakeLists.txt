@@ -31,7 +31,7 @@ if ( ament_cmake_FOUND )
   find_package(rcl_interfaces REQUIRED)
   find_package(spdlog_vendor REQUIRED)
 
-  add_library(${PROJECT_NAME} src/ros2_sink.cpp src/logger.cpp include/spdlog_ros/logging_macros.hpp include/spdlog_ros/ros2_logging.hpp include/spdlog_ros/ros2_get_time_point.h include/spdlog_ros/get_time_point.h)
+  add_library(${PROJECT_NAME} src/ros2_sink.cpp src/logger.cpp)
 
   target_link_libraries(${PROJECT_NAME}
     spdlog::spdlog
@@ -79,7 +79,7 @@ else()
 
   include_directories(${catkin_INCLUDE_DIRS})
 
-  add_library(${PROJECT_NAME} src/ros_sink.cpp src/logger.cpp include/spdlog_ros/logging_macros.hpp include/spdlog_ros/logging.hpp include/spdlog_ros/ros_logging.hpp include/spdlog_ros/ros_get_time_point.h include/spdlog_ros/get_time_point.h)
+  add_library(${PROJECT_NAME} src/ros_sink.cpp src/logger.cpp src/ros_logging.cpp)
   
   target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <mutex>
+#include <unordered_map>
+
 #include "spdlog/logger.h"
 
 namespace spdlog_ros
@@ -22,6 +25,10 @@ bool AddSinkToDefaultSinks(spdlog::sink_ptr sink);
 std::shared_ptr<spdlog::logger> CreateAsyncLogger(const std::string& name,
                                                   std::vector<spdlog::sink_ptr> sinks = {},
                                                   bool add_default_sinks = true);
+
+std::mutex& GetLoggerMapMutex();
+
+std::unordered_map<std::string, std::shared_ptr<spdlog::logger>>& GetLoggerMap();
 
 std::shared_ptr<spdlog::logger> GetLogger(const std::string& name,
                                           bool create_if_not_existing = true,
