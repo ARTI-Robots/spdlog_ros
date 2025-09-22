@@ -56,6 +56,10 @@ bool SetLoggerLevelCallback(
 
 void SetUpROSLogging(rclcpp::Node::SharedPtr node)
 {
+  // Set the root logger name, all loggers will be prefixed with this name
+  // Note that the file name for logging is "~/logfiles/{root_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
+  spdlog_ros::SetRootLoggerName(node->get_name());
+
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   spdlog_ros::UseROSTime(node->get_clock());
 

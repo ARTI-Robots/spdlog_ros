@@ -53,11 +53,21 @@ bool SetLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLog
 
 void SetUpROSLogging()
 {
-  // Use the private node handle to create the ROS sink and services in the private namespace
-  ros::NodeHandle nh_priv("~");
+  // Set the root logger name, all loggers will be prefixed with this name
+  // Note that the file name for logging is "~/logfiles/{root_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
+  std::string full_node_name = ros::this_node::getName();
+  // remove leading slash if existing
+  if (!full_node_name.empty() && full_node_name[0] == '/')
+  {
+    full_node_name.erase(0, 1); 
+  }
+  spdlog_ros::SetRootLoggerName(full_node_name);
 
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   spdlog_ros::UseROSTime();
+
+  // Use the private node handle to create the ROS sink and services in the private namespace
+  ros::NodeHandle nh_priv("~");
 
   // Create a ROS sink
   auto ros_sink = std::make_shared<spdlog_ros::RosSink>(nh_priv);

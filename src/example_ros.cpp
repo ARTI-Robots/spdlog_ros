@@ -11,18 +11,18 @@ int mainWithRos(int argc, char** argv)
   // Create a ROS2 node
   ros::NodeHandle node;
 
+  // Set up ROS logging
+  spdlog_ros::SetUpROSLogging();
+
+  // As an alternative to the above setup function, one could also do the following manually here.
+  // This is however missing the service setup for getting/setting logger levels at runtime
+  // and is therefore not recommended.
+
   // Set the root logger name, all loggers will be prefixed with this name (e.g. your ros node name)
   // If none is set, the logger name is directly the full logger name given at creation
   // Note that this should happen before all other calls to spdlog_ros such that the file name for logging
   // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
-  spdlog_ros::SetRootLoggerName("my_logger_root");
-
-  // Set up ROS logging
-  spdlog_ros::SetUpROSLogging();
-
-  // As an alternative to the above two calls, one could also do the following manually here.
-  // This is however missing the service setup for getting/setting logger levels at runtime
-  // and is therefore not recommended.
+  // spdlog_ros::SetRootLoggerName("my_logger_root");
 
   // // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   // spdlog_ros::UseROSTime();
