@@ -176,7 +176,7 @@ std::shared_ptr<spdlog::logger> GetLogger(const std::string& name, bool create_i
   else if (create_if_not_existing)
   {
     logger = spdlog_ros::CreateAsyncLogger(name, {}, add_default_sinks);
-    spdlog::register_logger(logger);
+    spdlog::initialize_logger(logger);
     GetLoggerMap()[full_logger_name] = logger;
   }
 

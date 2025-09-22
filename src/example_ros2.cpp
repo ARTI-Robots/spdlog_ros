@@ -1,5 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <spdlog/spdlog.h>
+#include <spdlog/cfg/env.h>
 #include "spdlog_ros/logger.hpp"
 #include "spdlog_ros/logging.hpp"
 #include "spdlog_ros/ros2_logging.hpp"
@@ -18,11 +19,26 @@ int mainWithRos(int argc, char** argv)
   // This is however missing the service setup for getting/setting logger levels at runtime
   // and is therefore not recommended.
 
+  // // Load log levels from the environment variable SPDLOG_LEVEL
+  // // Note that this works for all existing as well as future loggers BUT the log levels need to match the spdlog
+  // // levels and NOT the ROS log levels
+  // // Examples:
+  // //
+  // // set global level to debug:
+  // // export SPDLOG_LEVEL=debug
+  // //
+  // // turn off all logging except for spdlog_ros_example.named_logger1:
+  // // export SPDLOG_LEVEL="off,spdlog_ros_example.named_logger1=debug"
+  // //
+  // // turn off all logging except for named_logger1 (debug) and named_logger2 (info):
+  // // export SPDLOG_LEVEL="off,spdlog_ros_example.named_logger1=debug,spdlog_ros_example.named_logger2=info"
+  // spdlog::cfg::load_env_levels();
+
   // Set the root logger name, all loggers will be prefixed with this name (e.g. your ros node name)
   // If none is set, the logger name is directly the full logger name given at creation
   // Note that this should happen before all other calls to spdlog_ros such that the file name for logging
   // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
-  // spdlog_ros::SetRootLoggerName("my_logger_root");
+  // spdlog_ros::SetRootLoggerName("spdlog_ros_example");
 
   // // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   // spdlog_ros::UseROSTime(node->get_clock());
@@ -42,7 +58,7 @@ int mainWithRos(int argc, char** argv)
   // auto logger = spdlog_ros::CreateAsyncLogger("my_logger");
   // // if one wants to use this logger everywhere, it needs to be registered to spdlog because
   // // otherwise the macros won't find it
-  // spdlog::register_logger(logger);
+  // spdlog::initialize_logger(logger);
   // // Optionally, make this the default logger, accessible globally (registering is not required then)
   // spdlog::set_default_logger(logger);
 

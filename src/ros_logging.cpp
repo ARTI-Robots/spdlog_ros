@@ -5,6 +5,7 @@
 #include "spdlog_ros/ros_logging.hpp"
 
 #include <spdlog/logger.h>
+#include <spdlog/cfg/env.h>
 
 #include "ros/node_handle.h"
 #include "spdlog_ros/logger.hpp"
@@ -53,6 +54,21 @@ bool SetLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLog
 
 void SetUpROSLogging()
 {
+  // Load log levels from the environment variable SPDLOG_LEVEL
+  // Note that this works for all existing as well as future loggers BUT the log levels need to match the spdlog levels
+  // and NOT the ROS log levels
+  // Examples:
+  //
+  // set global level to debug:
+  // export SPDLOG_LEVEL=debug
+  //
+  // turn off all logging except for node_name.named_logger1:
+  // export SPDLOG_LEVEL="off,node_name.named_logger1=debug"
+  //
+  // turn off all logging except for node_name.named_logger1 (debug) and node_name.named_logger2 (info):
+  // export SPDLOG_LEVEL="off,node_name.named_logger1=debug,node_name.named_logger2=info"
+  spdlog::cfg::load_env_levels();
+
   // Set the root logger name, all loggers will be prefixed with this name
   // Note that the file name for logging is "~/logfiles/{root_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
   std::string full_node_name = ros::this_node::getName();
