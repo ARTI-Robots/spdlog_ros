@@ -16,19 +16,19 @@ inline static int8_t ConvertSeverityToROS(spdlog::level::level_enum level)
   switch (level)
   {
   case spdlog::level::trace:
-      return rosgraph_msgs::Log::DEBUG;
+    return rosgraph_msgs::Log::DEBUG;
   case spdlog::level::debug:
-      return rosgraph_msgs::Log::DEBUG;
+    return rosgraph_msgs::Log::DEBUG;
   case spdlog::level::info:
-      return rosgraph_msgs::Log::INFO;
+    return rosgraph_msgs::Log::INFO;
   case spdlog::level::warn:
-      return rosgraph_msgs::Log::WARN;
+    return rosgraph_msgs::Log::WARN;
   case spdlog::level::err:
-      return rosgraph_msgs::Log::ERROR;
+    return rosgraph_msgs::Log::ERROR;
   case spdlog::level::critical:
-      return rosgraph_msgs::Log::FATAL;
+    return rosgraph_msgs::Log::FATAL;
   default:
-      return 0;
+    return 0;
   }
 }
 
@@ -37,17 +37,17 @@ inline static std::string ConvertROSLogLevelToString(int8_t level)
   switch (level)
   {
   case rosgraph_msgs::Log::DEBUG:
-      return "debug";
+    return "debug";
   case rosgraph_msgs::Log::INFO:
-      return "info";
+    return "info";
   case rosgraph_msgs::Log::WARN:    
-      return "warn";
+    return "warn";
   case rosgraph_msgs::Log::ERROR:
-      return "error";
+    return "error";
   case rosgraph_msgs::Log::FATAL:
-      return "fatal";
+    return "fatal";
   default:
-      return "";
+    return "";
   }
 }
 
@@ -56,17 +56,17 @@ inline static spdlog::level::level_enum ConvertROSLogLevelToSpdlog(int8_t level)
   switch (level)
   {
   case rosgraph_msgs::Log::DEBUG:
-      return spdlog::level::debug;
+    return spdlog::level::debug;
   case rosgraph_msgs::Log::INFO:
-      return spdlog::level::info;
+    return spdlog::level::info;
   case rosgraph_msgs::Log::WARN:    
-      return spdlog::level::warn;
+    return spdlog::level::warn;
   case rosgraph_msgs::Log::ERROR:
-      return spdlog::level::err;
+    return spdlog::level::err;
   case rosgraph_msgs::Log::FATAL:
-      return spdlog::level::critical;
+    return spdlog::level::critical;
   default:
-      return spdlog::level::off;
+    return spdlog::level::off;
   }
 }
 

@@ -4,26 +4,24 @@
 
 #pragma once
 
-#include "spdlog_ros/logger.hpp"
-#include "spdlog_ros/ros2_sink.hpp"
-#include "spdlog_ros/ros2_get_time_point.h"
-
 #include <rclcpp/rclcpp.hpp>
+
+#include <spdlog_ros/srv/get_loggers.hpp>
+#include <spdlog_ros/srv/set_logger_level.hpp>
 
 namespace spdlog_ros
 {
 
-inline void SetUpROSLogging(rclcpp::Node::SharedPtr node)
-{
-  // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
-  spdlog_ros::UseROSTime(node->get_clock());
+bool GetLoggersCallback(
+  const std::shared_ptr<rmw_request_id_t> request_header,
+  const std::shared_ptr<spdlog_ros::srv::GetLoggers::Request> request,
+  const std::shared_ptr<spdlog_ros::srv::GetLoggers::Response> response);
 
-  // Create a ROS sink
-  auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
+bool SetLoggerLevelCallback(
+  const std::shared_ptr<rmw_request_id_t> request_header,
+  const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Request> request,
+  const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> response);
 
-  // The default sinks are stdout/stderr and file logging
-  // When adding here a default sink, all other loggers will have that sink
-  spdlog_ros::AddSinkToDefaultSinks(ros_sink);
-}
+void SetUpROSLogging(rclcpp::Node::SharedPtr node);
 
 }  // namespace spdlog_ros

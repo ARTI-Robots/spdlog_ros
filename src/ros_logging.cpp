@@ -2,8 +2,6 @@
 // Created by Fabian Hirmann on 19.09.2025.
 //
 
-#pragma once
-
 #include "spdlog_ros/ros_logging.hpp"
 
 #include <spdlog/logger.h>

@@ -20,7 +20,9 @@ int mainWithRos(int argc, char** argv)
   // Set up ROS logging
   spdlog_ros::SetUpROSLogging(node);
 
-  // As an alternative to the above two calls, one could also do the following manually here:
+  // As an alternative to the above two calls, one could also do the following manually here.
+  // This is however missing the service setup for getting/setting logger levels at runtime
+  // and is therefore not recommended.
 
   // // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   // spdlog_ros::UseROSTime(node->get_clock());
@@ -337,6 +339,17 @@ int mainWithRos(int argc, char** argv)
 
   SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "FATAL message " << " stream throttle first 1");
   SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "FATAL message " << " stream throttle first 2");
+
+  // make an infinite loop to test throttling
+  while (rclcpp::ok())
+  {
+    SPDLOG_ROS_DEBUG("looping...");
+    SPDLOG_ROS_INFO_THROTTLE(1e3, "1s throttle");
+    SPDLOG_ROS_ERROR_THROTTLE(2e3, "2s throttle");
+    SPDLOG_ROS_FATAL_THROTTLE(5e3, "5s throttle");
+    rclcpp::spin_some(node);
+    rclcpp::sleep_for(std::chrono::milliseconds(100));
+  }
 
   return 0;
 }

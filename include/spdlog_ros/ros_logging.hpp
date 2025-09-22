@@ -4,11 +4,8 @@
 
 #pragma once
 
-#include <ros/node_handle.h>
-
 #include <roscpp/GetLoggers.h>
 #include <roscpp/SetLoggerLevel.h>
-#include <rosgraph_msgs/Log.h>
 
 namespace spdlog_ros
 {
