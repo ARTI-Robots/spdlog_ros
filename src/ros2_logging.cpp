@@ -26,14 +26,12 @@ bool GetLoggersCallback(
 {
   response->loggers.clear();
 
-  const std::lock_guard<std::mutex> lock(GetLoggerMapMutex());
-
-  for (const auto& logger : spdlog_ros::GetLoggerMap())
+  for (const auto& logger : spdlog_ros::Logger::GetInstance()->getLoggerLevels())
   {
     spdlog_ros::msg::Logger logger_msg;
     logger_msg.name = logger.first;
     logger_msg.level =
-      spdlog_ros::ConvertROSLogLevelToString(spdlog_ros::ConvertSeverityToROS(logger.second->level()));
+      spdlog_ros::ConvertROSLogLevelToString(spdlog_ros::ConvertSeverityToROS(logger.second));
     response->loggers.push_back(logger_msg);
   }
   return true;
@@ -44,13 +42,8 @@ bool SetLoggerLevelCallback(
   const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Request> request,
   const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> /* response */)
 {
-  const std::lock_guard<std::mutex> lock(GetLoggerMapMutex());
-  auto it = spdlog_ros::GetLoggerMap().find(request->logger);
-  if (it != spdlog_ros::GetLoggerMap().end())
-  {
-    auto logger = it->second;
-    logger->set_level(spdlog_ros::ConvertROSLogLevelToSpdlog(spdlog_ros::ConvertStringToROSLogLevel(request->level)));
-  }
+  spdlog_ros::Logger::GetInstance()->setLoggerLevel(
+    request->logger, spdlog_ros::ConvertROSLogLevelToSpdlog(spdlog_ros::ConvertStringToROSLogLevel(request->level)));
 
   return true;
 }
@@ -74,7 +67,7 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
 
   // Set the root logger name, all loggers will be prefixed with this name
   // Note that the file name for logging is "~/logfiles/{root_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
-  spdlog_ros::SetRootLoggerName(node->get_name());
+  spdlog_ros::Logger::CreateRootLogger(node->get_name());
 
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   spdlog_ros::UseROSTime(node->get_clock());
@@ -84,7 +77,7 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
 
   // The default sinks are stdout/stderr and file logging
   // When adding here a default sink, all other loggers will have that sink
-  spdlog_ros::AddSinkToDefaultSinks(ros_sink);
+  spdlog_ros::Logger::GetInstance()->addSinkToDefaultSinks(ros_sink);
 
   // Create the services to get and set the logger levels at runtime
   static auto get_loggers_srv = 

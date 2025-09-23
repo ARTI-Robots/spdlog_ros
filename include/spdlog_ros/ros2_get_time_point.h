@@ -5,7 +5,7 @@
 #ifndef SPDLOG_ROS_ROS2_GET_TIME_POINT_H
 #define SPDLOG_ROS_ROS2_GET_TIME_POINT_H
 
-#include <spdlog_ros/get_time_point.h>
+#include "spdlog_ros/logger.hpp"
 
 #include <rclcpp/clock.hpp>
 
@@ -14,18 +14,19 @@ namespace spdlog_ros
 
 inline void UseROSTime(rclcpp::Clock::SharedPtr clock)
 {
-  SetTimePointCallback([c=clock](spdlog_ros_utils_time_point_value_t * time_point) -> spdlog_ros_utils_ret_t
-  {
-    try
+  spdlog_ros::Logger::GetInstance()->setTimePointCallback(
+    [c=clock](spdlog_ros_utils_time_point_value_t * time_point) -> spdlog_ros_utils_ret_t
     {
-      *time_point = c->now().nanoseconds();
-    }
-    catch (...)
-    {
-      return SPDLOG_ROS_UTILS_RET_ERROR;
-    }
-    return SPDLOG_ROS_UTILS_RET_OK;
-  });
+      try
+      {
+        *time_point = c->now().nanoseconds();
+      }
+      catch (...)
+      {
+        return SPDLOG_ROS_UTILS_RET_ERROR;
+      }
+      return SPDLOG_ROS_UTILS_RET_OK;
+    });
 }
 
 }  // namespace spdlog_ros

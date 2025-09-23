@@ -26,14 +26,12 @@ bool GetLoggersCallback(roscpp::GetLoggers::Request& /* req */, roscpp::GetLogge
 {
   res.loggers.clear();
 
-  const std::lock_guard<std::mutex> lock(GetLoggerMapMutex());
-
-  for (const auto& logger : spdlog_ros::GetLoggerMap())
+  for (const auto& logger : spdlog_ros::Logger::GetInstance()->getLoggerLevels())
   {
     roscpp::Logger logger_msg;
     logger_msg.name = logger.first;
     logger_msg.level =
-      spdlog_ros::ConvertROSLogLevelToString(spdlog_ros::ConvertSeverityToROS(logger.second->level()));
+      spdlog_ros::ConvertROSLogLevelToString(spdlog_ros::ConvertSeverityToROS(logger.second));
     res.loggers.push_back(logger_msg);
   }
   return true;
@@ -41,13 +39,8 @@ bool GetLoggersCallback(roscpp::GetLoggers::Request& /* req */, roscpp::GetLogge
 
 bool SetLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLoggerLevel::Response& /* res */)
 {
-  const std::lock_guard<std::mutex> lock(GetLoggerMapMutex());
-  auto it = spdlog_ros::GetLoggerMap().find(req.logger);
-  if (it != spdlog_ros::GetLoggerMap().end())
-  {
-    auto logger = it->second;
-    logger->set_level(spdlog_ros::ConvertROSLogLevelToSpdlog(spdlog_ros::ConvertStringToROSLogLevel(req.level)));
-  }
+  spdlog_ros::Logger::GetInstance()->setLoggerLevel(
+    req.logger, spdlog_ros::ConvertROSLogLevelToSpdlog(spdlog_ros::ConvertStringToROSLogLevel(req.level)));
 
   return true;
 }
@@ -77,7 +70,7 @@ void SetUpROSLogging()
   {
     full_node_name.erase(0, 1); 
   }
-  spdlog_ros::SetRootLoggerName(full_node_name);
+  spdlog_ros::Logger::CreateRootLogger(full_node_name);
 
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   spdlog_ros::UseROSTime();
@@ -90,7 +83,7 @@ void SetUpROSLogging()
 
   // The default sinks are stdout/stderr and file logging
   // When adding here a default sink, all other loggers will have that sink
-  spdlog_ros::AddSinkToDefaultSinks(ros_sink);
+  spdlog_ros::Logger::GetInstance()->addSinkToDefaultSinks(ros_sink);
 
   // Create the services to get and set the logger levels at runtime
   static auto get_loggers_srv = 

@@ -22,55 +22,8 @@
 #ifndef SPDLOG_ROS_LOGGING_MACROS_HPP
 #define SPDLOG_ROS_LOGGING_MACROS_HPP
 
-#include "spdlog/spdlog.h"
-#include <spdlog_ros/logger.hpp>
-#include <spdlog_ros/get_time_point.h>
-
-#define SPDLOG_ROS_LEVEL_DEBUG spdlog::level::debug
-#define SPDLOG_ROS_LEVEL_INFO spdlog::level::info
-#define SPDLOG_ROS_LEVEL_WARN spdlog::level::warn
-#define SPDLOG_ROS_LEVEL_ERROR spdlog::level::err
-#define SPDLOG_ROS_LEVEL_FATAL spdlog::level::critical
-
-/// Convenience macro to convert milliseconds to nanoseconds.
-#define SPDLOG_ROS_UTILS_MS_TO_NS(milliseconds) ((milliseconds) * (1000LL * 1000LL))
-
-/// Successful operation.
-#define SPDLOG_ROS_UTILS_RET_OK 0
-/// Generic failure in operation.
-#define SPDLOG_ROS_UTILS_RET_ERROR 2
-
-// Provide the compiler with branch prediction information
-#ifndef _WIN32
-/**
- * \def SPDLOG_ROS_UTILS_LIKELY
- * Instruct the compiler to optimize for the case where the argument equals 1.
- */
-# define SPDLOG_ROS_UTILS_LIKELY(x) __builtin_expect((x), 1)
-/**
- * \def SPDLOG_ROS_UTILS_UNLIKELY
- * Instruct the compiler to optimize for the case where the argument equals 0.
- */
-# define SPDLOG_ROS_UTILS_UNLIKELY(x) __builtin_expect((x), 0)
-#else
-/**
- * \def SPDLOG_ROS_UTILS_LIKELY
- * No op since Windows doesn't support providing branch prediction information.
- */
-# define SPDLOG_ROS_UTILS_LIKELY(x) (x)
-/**
- * \def SPDLOG_ROS_UTILS_UNLIKELY
- * No op since Windows doesn't support providing branch prediction information.
- */
-# define SPDLOG_ROS_UTILS_UNLIKELY(x) (x)
-#endif  // _WIN32
-
-// This is to avoid compilation warnings in C++ with '-Wold-style-cast'.
-#ifdef __cplusplus
-#define SPDLOG_ROS_UTILS_CAST_DURATION(x) (static_cast < spdlog_ros_utils_duration_value_t > (x))
-#else
-#define SPDLOG_ROS_UTILS_CAST_DURATION(x) ((spdlog_ros_utils_duration_value_t)x)
-#endif
+#include <spdlog/spdlog.h>
+#include "spdlog_ros/logger.hpp"
 
 // The SPDLOG_ROS_UTILS_LOG_COND macro is surrounded by do { .. } while (0) to implement
 // the standard C macro idiom to make the macro safe in all contexts; see
@@ -78,7 +31,7 @@
 #define SPDLOG_ROS_UTILS_LOG_COND(name, severity, condition_before, condition_after, ...) \
   do { \
       condition_before \
-      SPDLOG_LOGGER_CALL((spdlog_ros::GetLogger(name)), severity, __VA_ARGS__); \
+      SPDLOG_LOGGER_CALL((spdlog_ros::Logger::GetInstance()->getLogger(name)), severity, __VA_ARGS__); \
       condition_after \
   } while (0)
 ///@{
@@ -360,7 +313,7 @@
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
       "", \
       severity, \
-      spdlog_ros::GetTimePointCallback(), \
+      spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
       duration, \
       __VA_ARGS__); \
   } while (0)
@@ -382,7 +335,7 @@
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
       "", \
       severity, \
-      spdlog_ros::GetTimePointCallback(), \
+      spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
       duration, \
       __VA_ARGS__); \
   } while (0)
@@ -605,7 +558,7 @@
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
       "", \
       severity, \
-      spdlog_ros::GetTimePointCallback(), \
+      spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -628,7 +581,7 @@
     SPDLOG_ROS_UTILS_LOG_THROTTLE( \
       name, \
       severity, \
-      spdlog_ros::GetTimePointCallback(), \
+      spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -651,7 +604,7 @@
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
       "", \
       severity, \
-      spdlog_ros::GetTimePointCallback(), \
+      spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)
@@ -675,7 +628,7 @@
     SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
       name, \
       severity, \
-      spdlog_ros::GetTimePointCallback(), \
+      spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
       duration, \
       "{}", spllog_ros_stream_ss_.str().c_str()); \
   } while (0)

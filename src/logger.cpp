@@ -4,6 +4,7 @@
 #include <ctime>
 #include <unordered_map>
 #include <mutex>
+#include <stdexcept>
 
 #include "spdlog/spdlog.h"
 #include "spdlog/async.h"
@@ -13,27 +14,41 @@
 namespace spdlog_ros
 {
 
-std::string& GetRootLoggerName()
+// Definition of the static member
+std::shared_ptr<Logger> Logger::instance_ = nullptr;
+
+void Logger::CreateRootLogger(const std::string& root_logger_name)
 {
-  static std::string root_logger_name = "";
-  return root_logger_name;
+  instance_ = std::shared_ptr<Logger>(new Logger(root_logger_name));
 }
 
-void SetRootLoggerName(const std::string& name)
+std::shared_ptr<Logger> Logger::GetInstance()
 {
-  GetRootLoggerName() = name;
+  if (!instance_)
+  {
+    throw std::runtime_error("Logger instance not created yet. Call createRootLogger() first.");
+  }
+  return instance_;
 }
 
-std::string GetFullLoggerName(const std::string& name)
+Logger::Logger(const std::string& root_logger_name)
+  : root_logger_name_(root_logger_name)
+{
+  spdlog::init_thread_pool(32768, 1); // queue with max 32k items 1 backing thread.
+
+  createDefaultSinks();
+}
+
+std::string Logger::getFullLoggerName(const std::string& name)
 {
   std::string full_logger_name = "";
 
-  if (!GetRootLoggerName().empty())
+  if (!root_logger_name_.empty())
   {
-    full_logger_name += GetRootLoggerName();
+    full_logger_name += root_logger_name_;
   }
 
-  if (!GetRootLoggerName().empty() && !name.empty())
+  if (!root_logger_name_.empty() && !name.empty())
   {
     full_logger_name += ".";
   }
@@ -46,88 +61,78 @@ std::string GetFullLoggerName(const std::string& name)
   return full_logger_name;
 }
 
-std::vector<spdlog::sink_ptr>& GetDefaultSinks()
+void Logger::createDefaultSinks()
 {
-  static std::vector<spdlog::sink_ptr> default_sinks;
-  if (default_sinks.empty())
+  default_sinks_.clear();
+
+  // add console sink
+  static auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+  default_sinks_.push_back(console_sink);
+
+  // add file sink as YYYY-MM-DD_HH-MM-SS and set that as file path
+
+  // Check for environment variable SPDLOG_ROS_LOGFILES
+  // If not set, fallback to $HOME/logfiles
+  // If $HOME is not set, fallback to ./logfiles
+  const char* spdlog_env = std::getenv("SPDLOG_ROS_LOGFILES");
+  std::string log_dir;
+  if (spdlog_env != nullptr)
   {
-    // add console sink
-    static auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    default_sinks.push_back(console_sink);
-
-    // add file sink as YYYY-MM-DD_HH-MM-SS and set that as file path
-
-    // Check for environment variable SPDLOG_ROS_LOGFILES
-    // If not set, fallback to $HOME/logfiles
-    // If $HOME is not set, fallback to ./logfiles
-    const char* spdlog_env = std::getenv("SPDLOG_ROS_LOGFILES");
-    std::string log_dir;
-    if (spdlog_env != nullptr)
+    log_dir = spdlog_env;
+  }
+  else
+  {
+    // Fallback to $HOME/logfiles
+    const char* home_env = std::getenv("HOME");
+    if (home_env != nullptr)
     {
-      log_dir = spdlog_env;
+      log_dir = std::string(home_env) + "/logfiles";
     }
     else
     {
-      // Fallback to $HOME/logfiles
-      const char* home_env = std::getenv("HOME");
-      if (home_env != nullptr)
-      {
-        log_dir = std::string(home_env) + "/logfiles";
-      }
-      else
-      {
-        // Fallback if HOME is not defined (relative to where the executable is started)
-        log_dir = "logfiles";
-      }
+      // Fallback if HOME is not defined (relative to where the executable is started)
+      log_dir = "logfiles";
     }
-
-    // Get the current time and format it properly
-    auto now = std::chrono::system_clock::now();
-    auto in_time_t = std::chrono::system_clock::to_time_t(now);
-    std::tm buf;
-#ifdef _WIN32
-    gmtime_s(&buf, &in_time_t);
-#else
-    gmtime_r(&in_time_t, &buf);
-#endif
-    char time_str[21];
-    std::strftime(time_str, sizeof(time_str), "%Y-%m-%d_%H-%M-%SZ", &buf);
-
-    // Create the full log file path
-    // Example: /home/user/logfiles/my_logger_2023-10-05_14-30-00Z.log
-    // Note that if no root logger name is set (yet), the file name is just "_yyyy-mm-ddThh:mm:ssZ.log"
-    std::string log_file_path = log_dir + "/" + GetRootLoggerName() + "_" + std::string(time_str) + ".log";
-    static auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file_path, true);
-    default_sinks.push_back(file_sink);
   }
-  return default_sinks;
+
+  // Get the current time and format it properly
+  auto now = std::chrono::system_clock::now();
+  auto in_time_t = std::chrono::system_clock::to_time_t(now);
+  std::tm buf;
+#ifdef _WIN32
+  gmtime_s(&buf, &in_time_t);
+#else
+  gmtime_r(&in_time_t, &buf);
+#endif
+  char time_str[21];
+  std::strftime(time_str, sizeof(time_str), "%Y-%m-%d_%H-%M-%SZ", &buf);
+
+  // Create the full log file path
+  // Example: /home/user/logfiles/my_logger_2023-10-05_14-30-00Z.log
+  // Note that if no root logger name is set (yet), the file name is just "_yyyy-mm-ddThh:mm:ssZ.log"
+  std::string log_file_path = log_dir + "/" + root_logger_name_ + "_" + std::string(time_str) + ".log";
+  static auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file_path, true);
+  default_sinks_.push_back(file_sink);
 }
 
-bool AddSinkToDefaultSinks(spdlog::sink_ptr sink)
+bool Logger::addSinkToDefaultSinks(spdlog::sink_ptr sink)
 {
-  auto& default_sinks = GetDefaultSinks();
-  auto it = std::find(default_sinks.begin(), default_sinks.end(), sink);
-  if (it != default_sinks.end())
+  auto it = std::find(default_sinks_.begin(), default_sinks_.end(), sink);
+  if (it != default_sinks_.end())
   {
     return false;
   }
 
-  default_sinks.push_back(sink);
+  default_sinks_.push_back(sink);
   return true;
 }
 
-std::shared_ptr<spdlog::logger> CreateAsyncLogger(const std::string& name, std::vector<spdlog::sink_ptr> sinks, bool add_default_sinks)
+std::shared_ptr<spdlog::logger> Logger::createAsyncLogger(
+  const std::string& name, std::vector<spdlog::sink_ptr> sinks, bool add_default_sinks)
 {
-  static bool oninit = true;
-  if(oninit)
-  {
-    spdlog::init_thread_pool(32768, 1); // queue with max 32k items 1 backing thread.
-    oninit = false;
-  }
-
   if (add_default_sinks)
   {
-    for (const auto& sink : GetDefaultSinks())
+    for (const auto& sink : default_sinks_)
     {
       auto it = std::find(sinks.begin(), sinks.end(), sink);
       if (it == sinks.end())
@@ -138,49 +143,92 @@ std::shared_ptr<spdlog::logger> CreateAsyncLogger(const std::string& name, std::
   }
 
   return std::make_shared<spdlog::async_logger>(
-    GetFullLoggerName(name),
+    getFullLoggerName(name),
     sinks.begin(), sinks.end(),
     spdlog::thread_pool(),
     spdlog::async_overflow_policy::overrun_oldest);
 }
 
-std::mutex& GetLoggerMapMutex()
-{
-  // Use a regular mutex instead of a read-write mutex because a read-write mutex
-  // is not available in C++11 standard library and in practice it should not make a
-  // difference because the read-operation are just short and waiting should not be a 
-  // big issue and the write-operations are rare.
-  static std::mutex logger_map_mutex;
-  return logger_map_mutex;
-}
-
-std::unordered_map<std::string, std::shared_ptr<spdlog::logger>>& GetLoggerMap()
-{
-  static std::unordered_map<std::string, std::shared_ptr<spdlog::logger>> logger_map;
-  return logger_map;
-}
-
-std::shared_ptr<spdlog::logger> GetLogger(const std::string& name, bool create_if_not_existing, bool add_default_sinks)
+std::shared_ptr<spdlog::logger> Logger::getLogger(
+  const std::string& name, bool create_if_not_existing, bool add_default_sinks)
 {
   std::shared_ptr<spdlog::logger> logger = nullptr;
 
-  const std::lock_guard<std::mutex> lock(GetLoggerMapMutex());
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
 
-  const std::string full_logger_name = GetFullLoggerName(name);
+  const std::string full_logger_name = getFullLoggerName(name);
   
-  const auto logger_search_it = GetLoggerMap().find(full_logger_name);
-  if (logger_search_it != GetLoggerMap().end())
+  const auto logger_search_it = logger_map_.find(full_logger_name);
+  if (logger_search_it != logger_map_.end())
   {
     logger = logger_search_it->second;
   }
   else if (create_if_not_existing)
   {
-    logger = spdlog_ros::CreateAsyncLogger(name, {}, add_default_sinks);
+    logger = createAsyncLogger(name, {}, add_default_sinks);
     spdlog::initialize_logger(logger);
-    GetLoggerMap()[full_logger_name] = logger;
+    logger_map_[full_logger_name] = logger;
   }
 
   return logger;
+}
+
+bool Logger::setLoggerLevel(const std::string& name, spdlog::level::level_enum level)
+{
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+  
+  const auto logger_search_it = logger_map_.find(name);
+  if (logger_search_it != logger_map_.end())
+  {
+    logger_search_it->second->set_level(level);
+    return true;
+  }
+  return false;
+}
+
+std::unordered_map<std::string, spdlog::level::level_enum> Logger::getLoggerLevels()
+{
+  std::unordered_map<std::string, spdlog::level::level_enum> logger_levels;
+
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+
+  for (const auto& logger : logger_map_)
+  {
+    logger_levels[logger.first] = logger.second->level();
+  }
+
+  return logger_levels;
+}
+
+std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)>& Logger::getTimePointCallback()
+{
+  if (!clock_callback_)
+  {
+    // The default clock callback uses std::chrono to get the current time in nanoseconds since epoch
+    // The clock callback can be overridden by the user to use a different clock source (e.g. ROS time)
+    clock_callback_ =
+      [](spdlog_ros_utils_time_point_value_t * time_point) -> spdlog_ros_utils_ret_t
+      {
+        try
+        {
+          auto now = std::chrono::system_clock::now();
+          *time_point = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
+        }
+        catch (...)
+        {
+          return SPDLOG_ROS_UTILS_RET_ERROR;
+        }
+        return SPDLOG_ROS_UTILS_RET_OK;
+      };
+  }
+
+  return clock_callback_;
+}
+
+void Logger::setTimePointCallback(
+    std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)> clock_callback)
+{
+  clock_callback_ = clock_callback;
 }
 
 }  // namespace spdlog_ros
