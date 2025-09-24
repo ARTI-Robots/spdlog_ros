@@ -5,6 +5,7 @@
 #pragma once
 
 #include <mutex>
+#include <spdlog/common.h>
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -20,6 +21,20 @@ namespace spdlog_ros
 class Logger
 {
 public:
+
+  struct LoggerLocation
+  {
+    bool initialized = false;
+    bool enabled = false;
+    spdlog::level::level_enum level = spdlog::level::debug;
+  };
+
+  struct LoggerEntry
+  {
+    std::shared_ptr<spdlog::logger> logger;
+    std::vector<LoggerLocation*> logger_locations;
+  };
+
   Logger(const Logger& other) = delete;
   Logger& operator=(const Logger& other) = delete;
 
@@ -46,6 +61,10 @@ public:
 
   std::unordered_map<std::string, spdlog::level::level_enum> getLoggerLevels();
 
+  void initializeLogLocation(LoggerLocation* logger_status, const std::string& name, spdlog::level::level_enum level);
+  void setLogLocationLevel(LoggerLocation* logger_status, spdlog::level::level_enum level);
+  void checkLogLocationEnabled(LoggerLocation* logger_status, const std::string& name);
+
 private:
   Logger(const std::string& root_logger_name);
 
@@ -53,13 +72,17 @@ private:
 
   void createDefaultSinks();
 
+  std::shared_ptr<spdlog::logger> getLoggerNoLock(const std::string& name,
+                                                  bool create_if_not_existing = true,
+                                                  bool add_default_sinks = true);
+
   static std::shared_ptr<Logger> instance_;
 
   std::string root_logger_name_ = "";
 
   std::vector<spdlog::sink_ptr> default_sinks_;
 
-  std::unordered_map<std::string, std::shared_ptr<spdlog::logger>> logger_map_;
+  std::unordered_map<std::string, LoggerEntry> logger_map_;
   std::mutex logger_map_mutex_;
 
   std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)> clock_callback_;

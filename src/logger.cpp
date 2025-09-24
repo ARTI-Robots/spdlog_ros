@@ -152,22 +152,28 @@ std::shared_ptr<spdlog::logger> Logger::createAsyncLogger(
 std::shared_ptr<spdlog::logger> Logger::getLogger(
   const std::string& name, bool create_if_not_existing, bool add_default_sinks)
 {
-  std::shared_ptr<spdlog::logger> logger = nullptr;
-
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+
+  return getLoggerNoLock(name, create_if_not_existing, add_default_sinks);
+}
+
+std::shared_ptr<spdlog::logger> Logger::getLoggerNoLock(
+  const std::string& name, bool create_if_not_existing, bool add_default_sinks)
+{
+  std::shared_ptr<spdlog::logger> logger = nullptr;
 
   const std::string full_logger_name = getFullLoggerName(name);
   
   const auto logger_search_it = logger_map_.find(full_logger_name);
   if (logger_search_it != logger_map_.end())
   {
-    logger = logger_search_it->second;
+    logger = logger_search_it->second.logger;
   }
   else if (create_if_not_existing)
   {
     logger = createAsyncLogger(name, {}, add_default_sinks);
     spdlog::initialize_logger(logger);
-    logger_map_[full_logger_name] = logger;
+    logger_map_[full_logger_name] = {logger, {}};
   }
 
   return logger;
@@ -180,7 +186,27 @@ bool Logger::setLoggerLevel(const std::string& name, spdlog::level::level_enum l
   const auto logger_search_it = logger_map_.find(name);
   if (logger_search_it != logger_map_.end())
   {
-    logger_search_it->second->set_level(level);
+    logger_search_it->second.logger->set_level(level);
+
+    // go through all locations and enable/disable them depending on the log level there and the new log level
+    // There are three things to note:
+    // 1. This can be many many locations but as this happens only when the log level is changed compared to vice
+    //    versa at each log checking if it should be logged, this is very much faster (except exactly at that point
+    //    when the logger level changes)
+    // 2. Technically there is a race condition here that the logger level is above changed but below is not yet
+    //    changed and without a mutex in each logger statement after SPDLOG_ROS_LOGGING_ENABLED, it could be that
+    //    a few log messages are lost (the other way around that there are too many cannot be the case because even
+    //    when here it would still be enabled but actually not, later at logging the log messages are anyway discarded
+    //    from spdlog (but only later meaning a higher performance loss)). However this is neglectable because the
+    //    performance gain is much more important than a few lost log messages.
+    // 3. Technically it can also be that in the meanwhile when the write at location_it->enabled is done that a read
+    //    happens (most likely because of out-of-order execution from the CPU) but because of the same reason than
+    //    above, this is no issue and std::atomic<bool> is probably not worth the effort
+    for (auto&& location_it : logger_search_it->second.logger_locations)
+    {
+      location_it->enabled = logger_search_it->second.logger->should_log(location_it->level);
+    }
+
     return true;
   }
   return false;
@@ -194,7 +220,7 @@ std::unordered_map<std::string, spdlog::level::level_enum> Logger::getLoggerLeve
 
   for (const auto& logger : logger_map_)
   {
-    logger_levels[logger.first] = logger.second->level();
+    logger_levels[logger.first] = logger.second.logger->level();
   }
 
   return logger_levels;
@@ -229,6 +255,34 @@ void Logger::setTimePointCallback(
     std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)> clock_callback)
 {
   clock_callback_ = clock_callback;
+}
+
+void Logger::initializeLogLocation(
+  LoggerLocation* log_location, const std::string& name, spdlog::level::level_enum level)
+{
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+
+  log_location->initialized = true;
+  log_location->enabled = getLoggerNoLock(name)->should_log(level);
+  log_location->level = level;
+
+  const std::string full_logger_name = getFullLoggerName(name);
+
+  logger_map_[full_logger_name].logger_locations.push_back(log_location);
+}
+
+void Logger::setLogLocationLevel(LoggerLocation* log_location, spdlog::level::level_enum level)
+{
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+
+  log_location->level = level;
+}
+
+void Logger::checkLogLocationEnabled(LoggerLocation* log_location, const std::string& name)
+{
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+
+  log_location->enabled = getLoggerNoLock(name)->should_log(log_location->level);
 }
 
 }  // namespace spdlog_ros
