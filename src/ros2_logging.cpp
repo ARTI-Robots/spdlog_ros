@@ -80,6 +80,9 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
   spdlog_ros::LoggerManager::GetLoggerManager()->addSinkToDefaultSinks(ros_sink);
 
   // Create the services to get and set the logger levels at runtime
+  // Note that the target version is ROS 2 Humble which does not yet have integrated services and messages for logging
+  // Beginning with ROS 2 Iron and upward, the existing service definitions of rcl_interfaces could be used:
+  // https://github.com/ros2/rcl_interfaces/blob/rolling/rcl_interfaces/README.md#services
   static auto get_loggers_srv = 
     node->create_service<spdlog_ros::srv::GetLoggers>(
       "~/spdlog_ros/get_loggers", &spdlog_ros::GetLoggersCallback);

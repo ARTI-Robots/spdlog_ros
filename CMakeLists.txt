@@ -32,6 +32,11 @@ if ( ament_cmake_FOUND )
   find_package(spdlog_vendor REQUIRED)
   find_package(rosidl_default_generators REQUIRED)
 
+  # Create the required messages and services to get and set the logger levels
+  # Note that the target version is ROS 2 Humble which does not yet have integrated services and messages for logging
+  # Beginning with ROS 2 Iron and upward, the existing service definitions of rcl_interfaces could be used:
+  # https://github.com/ros2/rcl_interfaces/blob/rolling/rcl_interfaces/README.md#services
+
   set(msg_files
     "msg/Logger.msg"
   )

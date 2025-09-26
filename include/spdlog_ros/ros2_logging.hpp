@@ -6,6 +6,9 @@
 
 #include <rclcpp/rclcpp.hpp>
 
+// Note that the target version is ROS 2 Humble which does not yet have integrated services and messages for logging
+// Beginning with ROS 2 Iron and upward, the existing service definitions of rcl_interfaces could be used:
+// https://github.com/ros2/rcl_interfaces/blob/rolling/rcl_interfaces/README.md#services
 #include <spdlog_ros/srv/get_loggers.hpp>
 #include <spdlog_ros/srv/set_logger_level.hpp>
 
