@@ -210,11 +210,11 @@
  * \def SPDLOG_ROS_DEBUG_STREAM_EXPRESSION
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored when the expression evaluates to false.
- * \param name name of the logger prepended to the message
  * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_EXPRESSION_NAMED(name, expression, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_DEBUG, expression, name, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_EXPRESSION_NAMED(expression, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_DEBUG, expression, name, stream_arg)
 
 // The SPDLOG_ROS_DEBUG_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -236,9 +236,10 @@
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored when the function returns false.
  * \param function The functions return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_FUNCTION_NAMED(name, function, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_DEBUG, function, name, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_FUNCTION_NAMED(function, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_DEBUG, function, name, stream_arg)
 
 // The SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -282,11 +283,11 @@
  * \def SPDLOG_ROS_DEBUG_STREAM_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, stream_arg)
 
 // The SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -309,11 +310,11 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, stream_arg)
 
 #endif
 
@@ -517,11 +518,11 @@
  * \def SPDLOG_ROS_INFO_STREAM_EXPRESSION
  * Log a message with severity INFO with the following conditions:
  * Log calls are being ignored when the expression evaluates to false.
- * \param name name of the logger prepended to the message
  * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_EXPRESSION_NAMED(name, expression, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_INFO, expression, name, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_EXPRESSION_NAMED(expression, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_INFO, expression, name, stream_arg)
 
 // The SPDLOG_ROS_INFO_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -543,9 +544,10 @@
  * Log a message with severity INFO with the following conditions:
  * Log calls are being ignored when the function returns false.
  * \param function The functions return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_FUNCTION_NAMED(name, function, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_INFO, function, name, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_FUNCTION_NAMED(function, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_INFO, function, name, stream_arg)
 
 // The SPDLOG_ROS_INFO_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -554,7 +556,6 @@
  * \def SPDLOG_ROS_INFO_STREAM_SKIPFIRST
  * Log a message with severity INFO with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
- * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
 #define SPDLOG_ROS_INFO_STREAM_SKIPFIRST(stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST(SPDLOG_ROS_LEVEL_INFO, stream_arg)
@@ -590,11 +591,11 @@
  * \def SPDLOG_ROS_INFO_STREAM_THROTTLE
  * Log a message with severity INFO with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, stream_arg)
 
 // The SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -617,11 +618,11 @@
  * Log a message with severity INFO with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, stream_arg)
 
 #endif
 
@@ -825,11 +826,11 @@
  * \def SPDLOG_ROS_WARN_STREAM_EXPRESSION
  * Log a message with severity WARN with the following conditions:
  * Log calls are being ignored when the expression evaluates to false.
- * \param name name of the logger prepended to the message
  * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_EXPRESSION_NAMED(name, expression, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_WARN, expression, name, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_EXPRESSION_NAMED(expression, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_WARN, expression, name, stream_arg)
 
 // The SPDLOG_ROS_WARN_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -851,9 +852,10 @@
  * Log a message with severity WARN with the following conditions:
  * Log calls are being ignored when the function returns false.
  * \param function The functions return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_FUNCTION_NAMED(name, function, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_WARN, function, name, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_FUNCTION_NAMED(function, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_WARN, function, name, stream_arg)
 
 // The SPDLOG_ROS_WARN_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -898,11 +900,11 @@
  * \def SPDLOG_ROS_WARN_STREAM_THROTTLE
  * Log a message with severity WARN with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, stream_arg)
 
 // The SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -925,11 +927,11 @@
  * Log a message with severity WARN with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, stream_arg)
 
 #endif
 
@@ -1133,11 +1135,11 @@
  * \def SPDLOG_ROS_ERROR_STREAM_EXPRESSION
  * Log a message with severity ERROR with the following conditions:
  * Log calls are being ignored when the expression evaluates to false.
- * \param name name of the logger prepended to the message
  * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_EXPRESSION_NAMED(name, expression, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_ERROR, expression, name, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_EXPRESSION_NAMED(expression, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_ERROR, expression, name, stream_arg)
 
 // The SPDLOG_ROS_ERROR_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1159,9 +1161,10 @@
  * Log a message with severity ERROR with the following conditions:
  * Log calls are being ignored when the function returns false.
  * \param function The functions return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_FUNCTION_NAMED(name, function, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_ERROR, function, name, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_FUNCTION_NAMED(function, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_ERROR, function, name, stream_arg)
 
 // The SPDLOG_ROS_ERROR_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1206,11 +1209,11 @@
  * \def SPDLOG_ROS_ERROR_STREAM_THROTTLE
  * Log a message with severity ERROR with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, stream_arg)
 
 // The SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1233,11 +1236,11 @@
  * Log a message with severity ERROR with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, stream_arg)
 
 #endif
 
@@ -1392,11 +1395,11 @@
  * \def SPDLOG_ROS_FATAL_STREAM_EXPRESSION
  * Log a message with severity FATAL with the following conditions:
  * Log calls are being ignored when the expression evaluates to false.
- * \param name name of the logger prepended to the message
  * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_EXPRESSION_NAMED(name, expression, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_FATAL, expression, name, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_EXPRESSION_NAMED(expression, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_FATAL, expression, name, stream_arg)
 
 // The SPDLOG_ROS_FATAL_STREAM_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1418,9 +1421,10 @@
  * Log a message with severity FATAL with the following conditions:
  * Log calls are being ignored when the function returns false.
  * \param function The functions return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_FUNCTION_NAMED(name, function, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_FATAL, function, name, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_FUNCTION_NAMED(function, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_FATAL, function, name, stream_arg)
 
 // The SPDLOG_ROS_FATAL_STREAM_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1465,11 +1469,11 @@
  * \def SPDLOG_ROS_FATAL_STREAM_THROTTLE
  * Log a message with severity FATAL with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, stream_arg)
 
 // The SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1492,10 +1496,10 @@
  * Log a message with severity FATAL with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param name name of the logger prepended to the message
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(duration, name, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, stream_arg)
 
 #endif //SPDLOG_ROS_LOGGING_HPP
