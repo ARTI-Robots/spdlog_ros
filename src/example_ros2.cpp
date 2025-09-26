@@ -1,7 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/cfg/env.h>
-#include "spdlog_ros/logger.hpp"
+#include "spdlog_ros/logger_manager.hpp"
 #include "spdlog_ros/logging.hpp"
 #include "spdlog_ros/ros2_logging.hpp"
 
@@ -38,7 +38,7 @@ int mainWithRos(int argc, char** argv)
   // If none is set, the logger name is directly the full logger name given at creation
   // Note that this should happen before all other calls to spdlog_ros such that the file name for logging
   // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
-  // spdlog_ros::Logger::createRootLogger("spdlog_ros_example");
+  // spdlog_ros::LoggerManager::createLoggerManager("spdlog_ros_example");
 
   // // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   // spdlog_ros::UseROSTime(node->get_clock());
@@ -48,14 +48,14 @@ int mainWithRos(int argc, char** argv)
 
   // // The default sinks are stdout/stderr and file logging
   // // When adding here a default sink, all other loggers will have that sink
-  // spdlog_ros::Logger::GetInstance()->addSinkToDefaultSinks(ros_sink);
+  // spdlog_ros::LoggerManager::GetLoggerManager()->addSinkToDefaultSinks(ros_sink);
 
   // A logger can be created manually although not recommended and required because the SPDLOG_ROS_* macros
   // create loggers on the fly when used with a new logger name
 
   // // Create an async logger that logs to the console, file and ROS (note that the logger name is prefixed
   // // with the root logger name)
-  // auto logger = spdlog_ros::Logger::GetInstance()->createAsyncLogger("my_logger");
+  // auto logger = spdlog_ros::LoggerManager::GetLoggerManager()->createAsyncLogger("my_logger");
   // // if one wants to use this logger everywhere, it needs to be registered to spdlog because
   // // otherwise the macros won't find it
   // spdlog::initialize_logger(logger);

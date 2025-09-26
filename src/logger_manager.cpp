@@ -1,4 +1,4 @@
-#include "spdlog_ros/logger.hpp"
+#include "spdlog_ros/logger_manager.hpp"
 
 #include <chrono>
 #include <ctime>
@@ -15,23 +15,23 @@ namespace spdlog_ros
 {
 
 // Definition of the static member
-std::shared_ptr<Logger> Logger::instance_ = nullptr;
+std::shared_ptr<LoggerManager> LoggerManager::instance_ = nullptr;
 
-void Logger::CreateRootLogger(const std::string& root_logger_name)
+void LoggerManager::CreateLoggerManager(const std::string& root_logger_name)
 {
-  instance_ = std::shared_ptr<Logger>(new Logger(root_logger_name));
+  instance_ = std::shared_ptr<LoggerManager>(new LoggerManager(root_logger_name));
 }
 
-std::shared_ptr<Logger> Logger::GetInstance()
+std::shared_ptr<LoggerManager> LoggerManager::GetLoggerManager()
 {
   if (!instance_)
   {
-    throw std::runtime_error("Logger instance not created yet. Call createRootLogger() first.");
+    throw std::runtime_error("LoggerManager instance not created yet. Call CreateLoggerManager(...) first.");
   }
   return instance_;
 }
 
-Logger::Logger(const std::string& root_logger_name)
+LoggerManager::LoggerManager(const std::string& root_logger_name)
   : root_logger_name_(root_logger_name)
 {
   spdlog::init_thread_pool(32768, 1); // queue with max 32k items 1 backing thread.
@@ -39,7 +39,7 @@ Logger::Logger(const std::string& root_logger_name)
   createDefaultSinks();
 }
 
-std::string Logger::getFullLoggerName(const std::string& name)
+std::string LoggerManager::getFullLoggerName(const std::string& name)
 {
   std::string full_logger_name = "";
 
@@ -61,7 +61,7 @@ std::string Logger::getFullLoggerName(const std::string& name)
   return full_logger_name;
 }
 
-void Logger::createDefaultSinks()
+void LoggerManager::createDefaultSinks()
 {
   default_sinks_.clear();
 
@@ -115,7 +115,7 @@ void Logger::createDefaultSinks()
   default_sinks_.push_back(file_sink);
 }
 
-bool Logger::addSinkToDefaultSinks(spdlog::sink_ptr sink)
+bool LoggerManager::addSinkToDefaultSinks(spdlog::sink_ptr sink)
 {
   auto it = std::find(default_sinks_.begin(), default_sinks_.end(), sink);
   if (it != default_sinks_.end())
@@ -127,7 +127,7 @@ bool Logger::addSinkToDefaultSinks(spdlog::sink_ptr sink)
   return true;
 }
 
-std::shared_ptr<spdlog::logger> Logger::createAsyncLogger(
+std::shared_ptr<spdlog::logger> LoggerManager::createAsyncLogger(
   const std::string& name, std::vector<spdlog::sink_ptr> sinks, bool add_default_sinks)
 {
   if (add_default_sinks)
@@ -149,7 +149,7 @@ std::shared_ptr<spdlog::logger> Logger::createAsyncLogger(
     spdlog::async_overflow_policy::overrun_oldest);
 }
 
-std::shared_ptr<spdlog::logger> Logger::getLogger(
+std::shared_ptr<spdlog::logger> LoggerManager::getLogger(
   const std::string& name, bool create_if_not_existing, bool add_default_sinks)
 {
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
@@ -157,7 +157,7 @@ std::shared_ptr<spdlog::logger> Logger::getLogger(
   return getLoggerNoLock(name, create_if_not_existing, add_default_sinks);
 }
 
-std::shared_ptr<spdlog::logger> Logger::getLoggerNoLock(
+std::shared_ptr<spdlog::logger> LoggerManager::getLoggerNoLock(
   const std::string& name, bool create_if_not_existing, bool add_default_sinks)
 {
   std::shared_ptr<spdlog::logger> logger = nullptr;
@@ -179,7 +179,7 @@ std::shared_ptr<spdlog::logger> Logger::getLoggerNoLock(
   return logger;
 }
 
-bool Logger::setLoggerLevel(const std::string& name, spdlog::level::level_enum level)
+bool LoggerManager::setLoggerLevel(const std::string& name, spdlog::level::level_enum level)
 {
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
   
@@ -212,7 +212,7 @@ bool Logger::setLoggerLevel(const std::string& name, spdlog::level::level_enum l
   return false;
 }
 
-std::unordered_map<std::string, spdlog::level::level_enum> Logger::getLoggerLevels()
+std::unordered_map<std::string, spdlog::level::level_enum> LoggerManager::getLoggerLevels()
 {
   std::unordered_map<std::string, spdlog::level::level_enum> logger_levels;
 
@@ -226,7 +226,7 @@ std::unordered_map<std::string, spdlog::level::level_enum> Logger::getLoggerLeve
   return logger_levels;
 }
 
-std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)>& Logger::getTimePointCallback()
+std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)>& LoggerManager::getTimePointCallback()
 {
   if (!clock_callback_)
   {
@@ -251,13 +251,13 @@ std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)>& Log
   return clock_callback_;
 }
 
-void Logger::setTimePointCallback(
+void LoggerManager::setTimePointCallback(
     std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)> clock_callback)
 {
   clock_callback_ = clock_callback;
 }
 
-void Logger::initializeLogLocation(
+void LoggerManager::initializeLogLocation(
   LoggerLocation* log_location, const std::string& name, spdlog::level::level_enum level)
 {
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
@@ -271,14 +271,14 @@ void Logger::initializeLogLocation(
   logger_map_[full_logger_name].logger_locations.push_back(log_location);
 }
 
-void Logger::setLogLocationLevel(LoggerLocation* log_location, spdlog::level::level_enum level)
+void LoggerManager::setLogLocationLevel(LoggerLocation* log_location, spdlog::level::level_enum level)
 {
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
 
   log_location->level = level;
 }
 
-void Logger::checkLogLocationEnabled(LoggerLocation* log_location, const std::string& name)
+void LoggerManager::checkLogLocationEnabled(LoggerLocation* log_location, const std::string& name)
 {
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
 

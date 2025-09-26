@@ -49,7 +49,7 @@ if ( ament_cmake_FOUND )
   rosidl_get_typesupport_target(cpp_typesupport_target
     ${PROJECT_NAME} rosidl_typesupport_cpp)
 
-  add_library(${PROJECT_NAME}_lib src/ros2_sink.cpp src/logger.cpp src/ros2_logging.cpp)
+  add_library(${PROJECT_NAME}_lib src/ros2_sink.cpp src/logger_manager.cpp src/ros2_logging.cpp)
 
   target_link_libraries(${PROJECT_NAME}_lib
     spdlog::spdlog
@@ -98,7 +98,7 @@ else()
 
   include_directories(${catkin_INCLUDE_DIRS})
 
-  add_library(${PROJECT_NAME} src/ros_sink.cpp src/logger.cpp src/ros_logging.cpp)
+  add_library(${PROJECT_NAME} src/ros_sink.cpp src/logger_manager.cpp src/ros_logging.cpp)
   
   target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

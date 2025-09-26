@@ -18,7 +18,7 @@
 namespace spdlog_ros
 {
 
-class Logger
+class LoggerManager
 {
 public:
 
@@ -35,12 +35,12 @@ public:
     std::vector<LoggerLocation*> logger_locations;
   };
 
-  Logger(const Logger& other) = delete;
-  Logger& operator=(const Logger& other) = delete;
+  LoggerManager(const LoggerManager& other) = delete;
+  LoggerManager& operator=(const LoggerManager& other) = delete;
 
-  static void CreateRootLogger(const std::string& root_logger_name);
+  static void CreateLoggerManager(const std::string& root_logger_name);
 
-  static std::shared_ptr<Logger> GetInstance();
+  static std::shared_ptr<LoggerManager> GetLoggerManager();
 
   bool addSinkToDefaultSinks(spdlog::sink_ptr sink);
 
@@ -66,7 +66,7 @@ public:
   void checkLogLocationEnabled(LoggerLocation* logger_status, const std::string& name);
 
 private:
-  Logger(const std::string& root_logger_name);
+  LoggerManager(const std::string& root_logger_name);
 
   std::string getFullLoggerName(const std::string& name);
 
@@ -76,7 +76,7 @@ private:
                                                   bool create_if_not_existing = true,
                                                   bool add_default_sinks = true);
 
-  static std::shared_ptr<Logger> instance_;
+  static std::shared_ptr<LoggerManager> instance_;
 
   std::string root_logger_name_ = "";
 

@@ -23,7 +23,7 @@
 #define SPDLOG_ROS_LOGGING_MACROS_HPP
 
 #include <spdlog/spdlog.h>
-#include "spdlog_ros/logger.hpp"
+#include "spdlog_ros/logger_manager.hpp"
 
 // The SPDLOG_ROS_UTILS_LOG_COND macro is surrounded by do { .. } while (0) to implement
 // the standard C macro idiom to make the macro safe in all contexts; see
@@ -31,7 +31,7 @@
 #define SPDLOG_ROS_UTILS_LOG_COND(name, severity, condition_before, condition_after, ...) \
   do { \
       condition_before \
-      SPDLOG_LOGGER_CALL((spdlog_ros::Logger::GetInstance()->getLogger(name)), severity, __VA_ARGS__); \
+      SPDLOG_LOGGER_CALL((spdlog_ros::LoggerManager::GetLoggerManager()->getLogger(name)), severity, __VA_ARGS__); \
       condition_after \
   } while (0)
 ///@{
@@ -160,15 +160,15 @@
  * \param severity The severity of the logging as spdlog::level::level_enum
  */
 #define SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
-  static spdlog_ros::Logger::LoggerLocation __spdlog_ros_logging_enabled_log_location = {false, false, SPDLOG_ROS_LEVEL_DEBUG}; /* Initialized at compile-time */ \
+  static spdlog_ros::LoggerManager::LoggerLocation __spdlog_ros_logging_enabled_log_location = {false, false, SPDLOG_ROS_LEVEL_DEBUG}; /* Initialized at compile-time */ \
   if (SPDLOG_ROS_UTILS_UNLIKELY(!__spdlog_ros_logging_enabled_log_location.initialized)) \
   { \
-    spdlog_ros::Logger::GetInstance()->initializeLogLocation(&__spdlog_ros_logging_enabled_log_location, name, severity); \
+    spdlog_ros::LoggerManager::GetLoggerManager()->initializeLogLocation(&__spdlog_ros_logging_enabled_log_location, name, severity); \
   } \
   if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.level != severity)) /* For the case when the incoming log severity is different than the last time (for example if the logging is at one place conditional with different log levels)*/ \
   { \
-    spdlog_ros::Logger::GetInstance()->setLogLocationLevel(&__spdlog_ros_logging_enabled_log_location, severity); \
-    spdlog_ros::Logger::GetInstance()->checkLogLocationEnabled(&__spdlog_ros_logging_enabled_log_location, name); \
+    spdlog_ros::LoggerManager::GetLoggerManager()->setLogLocationLevel(&__spdlog_ros_logging_enabled_log_location, severity); \
+    spdlog_ros::LoggerManager::GetLoggerManager()->checkLogLocationEnabled(&__spdlog_ros_logging_enabled_log_location, name); \
   }
 
 # define SPDLOG_ROS_UTILS_LOG(name, severity, ...) \
@@ -362,7 +362,7 @@
       SPDLOG_ROS_UTILS_LOG_THROTTLE( \
         "", \
         severity, \
-        spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
         __VA_ARGS__); \
     } \
@@ -389,7 +389,7 @@
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
         "", \
         severity, \
-        spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
         __VA_ARGS__); \
     } \
@@ -667,7 +667,7 @@
       SPDLOG_ROS_UTILS_LOG_THROTTLE( \
         "", \
         severity, \
-        spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -695,7 +695,7 @@
       SPDLOG_ROS_UTILS_LOG_THROTTLE( \
         name, \
         severity, \
-        spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -723,7 +723,7 @@
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
         "", \
         severity, \
-        spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -752,7 +752,7 @@
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
         name, \
         severity, \
-        spdlog_ros::Logger::GetInstance()->getTimePointCallback(), \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \

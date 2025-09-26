@@ -9,7 +9,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include "spdlog_ros/logger.hpp"
+#include "spdlog_ros/logger_manager.hpp"
 #include "spdlog_ros/ros2_sink.hpp"
 #include "spdlog_ros/ros2_get_time_point.h"
 #include "spdlog_ros/ros2_utils.hpp"
@@ -26,7 +26,7 @@ bool GetLoggersCallback(
 {
   response->loggers.clear();
 
-  for (const auto& logger : spdlog_ros::Logger::GetInstance()->getLoggerLevels())
+  for (const auto& logger : spdlog_ros::LoggerManager::GetLoggerManager()->getLoggerLevels())
   {
     spdlog_ros::msg::Logger logger_msg;
     logger_msg.name = logger.first;
@@ -42,7 +42,7 @@ bool SetLoggerLevelCallback(
   const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Request> request,
   const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> /* response */)
 {
-  spdlog_ros::Logger::GetInstance()->setLoggerLevel(
+  spdlog_ros::LoggerManager::GetLoggerManager()->setLoggerLevel(
     request->logger, spdlog_ros::ConvertROSLogLevelToSpdlog(spdlog_ros::ConvertStringToROSLogLevel(request->level)));
 
   return true;
@@ -67,7 +67,7 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
 
   // Set the root logger name, all loggers will be prefixed with this name
   // Note that the file name for logging is "~/logfiles/{root_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
-  spdlog_ros::Logger::CreateRootLogger(node->get_name());
+  spdlog_ros::LoggerManager::CreateLoggerManager(node->get_name());
 
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   spdlog_ros::UseROSTime(node->get_clock());
@@ -77,7 +77,7 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
 
   // The default sinks are stdout/stderr and file logging
   // When adding here a default sink, all other loggers will have that sink
-  spdlog_ros::Logger::GetInstance()->addSinkToDefaultSinks(ros_sink);
+  spdlog_ros::LoggerManager::GetLoggerManager()->addSinkToDefaultSinks(ros_sink);
 
   // Create the services to get and set the logger levels at runtime
   static auto get_loggers_srv = 
