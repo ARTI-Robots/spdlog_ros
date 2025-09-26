@@ -127,12 +127,11 @@
  * \def SPDLOG_ROS_DEBUG_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_DEBUG_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_DEBUG_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -142,12 +141,11 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_DEBUG_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -272,11 +270,10 @@
  * \def SPDLOG_ROS_DEBUG_STREAM_THROTTLE
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, clock, duration, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, duration, stream_arg)
 
 // The SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -286,11 +283,10 @@
  * Log a message with severity DEBUG with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, stream_arg)
 
 // The SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -300,11 +296,10 @@
  * Log a message with severity DEBUG with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, clock, duration, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, duration, stream_arg)
 
 // The SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -315,11 +310,10 @@
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, stream_arg)
 
 #endif
 
@@ -440,12 +434,11 @@
  * \def SPDLOG_ROS_INFO_THROTTLE
  * Log a message with severity INFO with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_INFO_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_INFO, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_INFO_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_INFO, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -455,12 +448,11 @@
  * Log a message with severity INFO with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_INFO, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_INFO, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_INFO_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -586,11 +578,10 @@
  * \def SPDLOG_ROS_INFO_STREAM_THROTTLE
  * Log a message with severity INFO with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_INFO, clock, duration, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_INFO, duration, stream_arg)
 
 // The SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -600,11 +591,10 @@
  * Log a message with severity INFO with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, stream_arg)
 
 // The SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -614,11 +604,10 @@
  * Log a message with severity INFO with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_INFO, clock, duration, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_INFO, duration, stream_arg)
 
 // The SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -629,11 +618,10 @@
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, stream_arg)
 
 #endif
 
@@ -754,12 +742,11 @@
  * \def SPDLOG_ROS_WARN_THROTTLE
  * Log a message with severity WARN with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_WARN_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_WARN, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_WARN_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_WARN, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -769,12 +756,11 @@
  * Log a message with severity WARN with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_WARN, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_WARN, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_WARN_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -900,11 +886,10 @@
  * \def SPDLOG_ROS_WARN_STREAM_THROTTLE
  * Log a message with severity WARN with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_WARN, clock, duration, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_WARN, duration, stream_arg)
 
 // The SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -914,11 +899,10 @@
  * Log a message with severity WARN with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, stream_arg)
 
 // The SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -928,11 +912,10 @@
  * Log a message with severity WARN with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_WARN, clock, duration, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_WARN, duration, stream_arg)
 
 // The SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -943,11 +926,10 @@
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, stream_arg)
 
 #endif
 
@@ -1068,12 +1050,11 @@
  * \def SPDLOG_ROS_ERROR_THROTTLE
  * Log a message with severity ERROR with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_ERROR_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_ERROR_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1083,12 +1064,11 @@
  * Log a message with severity ERROR with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_ERROR_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1214,11 +1194,10 @@
  * \def SPDLOG_ROS_ERROR_STREAM_THROTTLE
  * Log a message with severity ERROR with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, clock, duration, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, duration, stream_arg)
 
 // The SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1228,11 +1207,10 @@
  * Log a message with severity ERROR with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, stream_arg)
 
 // The SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1242,11 +1220,10 @@
  * Log a message with severity ERROR with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, clock, duration, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, duration, stream_arg)
 
 // The SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1257,11 +1234,10 @@
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, stream_arg)
 
 #endif
 
@@ -1333,12 +1309,11 @@
  * \def SPDLOG_ROS_FATAL_THROTTLE
  * Log a message with severity FATAL with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_FATAL_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_FATAL_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1348,12 +1323,11 @@
  * Log a message with severity FATAL with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param ... The format string, followed by the variable arguments for the format string.
  * It also accepts a single argument of type std::string.
  */
-#define SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(clock, duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, clock, duration, __VA_ARGS__)
+#define SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, duration, __VA_ARGS__)
 
 // The SPDLOG_ROS_FATAL_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1479,11 +1453,10 @@
  * \def SPDLOG_ROS_FATAL_STREAM_THROTTLE
  * Log a message with severity FATAL with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, clock, duration, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, duration, stream_arg)
 
 // The SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1493,11 +1466,10 @@
  * Log a message with severity FATAL with the following conditions:
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, stream_arg)
 
 // The SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1507,11 +1479,10 @@
  * Log a message with severity FATAL with the following conditions:
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, clock, duration, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, duration, stream_arg)
 
 // The SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1522,10 +1493,9 @@
  * The first log call is being ignored but all subsequent calls are being processed.
  * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
  * \param name name of the logger prepended to the message
- * \param clock rclcpp::Clock that will be used to get the time point.
  * \param duration The duration of the throttle interval as an integral value in milliseconds.
  * \param stream_arg The argument << into a stringstream
  */
-#define SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(name, clock, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, clock, duration, name, stream_arg)
+#define SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(name, duration, stream_arg) SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, stream_arg)
 
 #endif //SPDLOG_ROS_LOGGING_HPP

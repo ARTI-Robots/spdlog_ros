@@ -1,21 +1,75 @@
-#include "spdlog_ros/ros2_sink.hpp"
-#include <spdlog_ros/logging.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/cfg/env.h>
+#include "spdlog_ros/logger_manager.hpp"
+#include "spdlog_ros/logging.hpp"
+#include "spdlog_ros/ros2_logging.hpp"
 
 int mainWithRos(int argc, char** argv)
 {
-
   rclcpp::init(argc, argv);
 
   // Create a ROS2 node
   auto node = rclcpp::Node::make_shared("spdlog_ros_example");
-  // Using ROS is optional
-  auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
 
-  // Create an async logger that logs to the console and ROS2
-  auto logger = spdlog_ros::CreateAsyncLogger("my_logger", {ros_sink});
-  logger->set_level(SPDLOG_ROS_LEVEL_DEBUG);
-  // Optionally, make this the default logger, accessible globally
-  spdlog::set_default_logger(logger);
+  // Set up ROS logging
+  spdlog_ros::SetUpROSLogging(node);
+
+  // As an alternative to the above setup function, one could also do the following manually here.
+  // This is however missing the service setup for getting/setting logger levels at runtime
+  // and is therefore not recommended.
+
+  // // Load log levels from the environment variable SPDLOG_LEVEL
+  // // Note that this works for all existing as well as future loggers BUT the log levels need to match the spdlog
+  // // levels and NOT the ROS log levels
+  // // Examples:
+  // //
+  // // set global level to debug:
+  // // export SPDLOG_LEVEL=debug
+  // //
+  // // turn off all logging except for spdlog_ros_example.named_logger1:
+  // // export SPDLOG_LEVEL="off,spdlog_ros_example.named_logger1=debug"
+  // //
+  // // turn off all logging except for named_logger1 (debug) and named_logger2 (info):
+  // // export SPDLOG_LEVEL="off,spdlog_ros_example.named_logger1=debug,spdlog_ros_example.named_logger2=info"
+  // spdlog::cfg::load_env_levels();
+
+  // Set the root logger name, all loggers will be prefixed with this name (e.g. your ros node name)
+  // If none is set, the logger name is directly the full logger name given at creation
+  // Note that this should happen before all other calls to spdlog_ros such that the file name for logging
+  // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
+  // spdlog_ros::LoggerManager::createLoggerManager("spdlog_ros_example");
+
+  // // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
+  // spdlog_ros::UseROSTime(node->get_clock());
+
+  // // Using ROS is optional
+  // auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
+
+  // // The default sinks are stdout/stderr and file logging
+  // // When adding here a default sink, all other loggers will have that sink
+  // spdlog_ros::LoggerManager::GetLoggerManager()->addSinkToDefaultSinks(ros_sink);
+
+  // A logger can be created manually although not recommended and required because the SPDLOG_ROS_* macros
+  // create loggers on the fly when used with a new logger name
+
+  // // Create an async logger that logs to the console, file and ROS (note that the logger name is prefixed
+  // // with the root logger name)
+  // auto logger = spdlog_ros::LoggerManager::GetLoggerManager()->createAsyncLogger("my_logger");
+  // // if one wants to use this logger everywhere, it needs to be registered to spdlog because
+  // // otherwise the macros won't find it
+  // spdlog::initialize_logger(logger);
+  // // Optionally, make this the default logger, accessible globally (registering is not required then)
+  // spdlog::set_default_logger(logger);
+
+  // // Log some messages
+  // logger->info("Hello, world!");
+  // logger->warn("This is a warning!");
+  // logger->error("This is an error!");
+  // spdlog::info("This message is logged using the default logger");
+
+  RCLCPP_INFO(node->get_logger(), "This info is logged using ROS logging");
+  RCLCPP_ERROR(node->get_logger(), "This error is logged using ROS logging");
 
   SPDLOG_ROS_DEBUG("debug message");
 
@@ -31,10 +85,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_DEBUG_SKIPFIRST("debug message skip first 1");
   SPDLOG_ROS_DEBUG_SKIPFIRST("debug message skip first 2");
 
-  SPDLOG_ROS_DEBUG_THROTTLE(*node->get_clock(), 100, "debug message throttle");
+  SPDLOG_ROS_DEBUG_THROTTLE(100, "debug message throttle");
 
-  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "debug message throttle 1");
-  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "debug message throttle 2");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(100, "debug message throttle 1");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(100, "debug message throttle 2");
 
   SPDLOG_ROS_DEBUG_STREAM("debug message " << " stream");
 
@@ -50,10 +104,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST("debug message " << " stream skip first 1");
   SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST("debug message " << " stream skip first 2");
 
-  SPDLOG_ROS_DEBUG_STREAM_THROTTLE(*node->get_clock(), 100, "debug message " << " stream throttle");
+  SPDLOG_ROS_DEBUG_STREAM_THROTTLE(100, "debug message " << " stream throttle");
 
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "debug message " << " stream throttle first 1");
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "debug message " << " stream throttle first 2");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(100, "debug message " << " stream throttle first 1");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(100, "debug message " << " stream throttle first 2");
 
   SPDLOG_ROS_DEBUG_STREAM_NAMED("fancy_name", "debug message " << " stream");
 
@@ -69,10 +123,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_NAMED("fancy_name", "debug message " << " stream skip first 1");
   SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_NAMED("fancy_name", "debug message " << " stream skip first 2");
 
-  SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "debug message " << " stream throttle");
+  SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED("fancy_name", 100, "debug message " << " stream throttle");
 
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "debug message " << " stream throttle first 1");
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "debug message " << " stream throttle first 2");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "debug message " << " stream throttle first 1");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "debug message " << " stream throttle first 2");
 
   SPDLOG_ROS_INFO("INFO message");
 
@@ -88,10 +142,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_INFO_SKIPFIRST("INFO message skip first 1");
   SPDLOG_ROS_INFO_SKIPFIRST("INFO message skip first 2");
 
-  SPDLOG_ROS_INFO_THROTTLE(*node->get_clock(), 100, "INFO message throttle");
+  SPDLOG_ROS_INFO_THROTTLE(100, "INFO message throttle");
 
-  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "INFO message throttle 1");
-  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "INFO message throttle 2");
+  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(100, "INFO message throttle 1");
+  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(100, "INFO message throttle 2");
 
   SPDLOG_ROS_INFO_STREAM("INFO message " << " stream");
 
@@ -107,10 +161,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_INFO_STREAM_SKIPFIRST("INFO message " << " stream skip first 1");
   SPDLOG_ROS_INFO_STREAM_SKIPFIRST("INFO message " << " stream skip first 2");
 
-  SPDLOG_ROS_INFO_STREAM_THROTTLE(*node->get_clock(), 100, "INFO message " << " stream throttle");
+  SPDLOG_ROS_INFO_STREAM_THROTTLE(100, "INFO message " << " stream throttle");
 
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "INFO message " << " stream throttle first 1");
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "INFO message " << " stream throttle first 2");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(100, "INFO message " << " stream throttle first 1");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(100, "INFO message " << " stream throttle first 2");
 
   SPDLOG_ROS_INFO_STREAM_NAMED("fancy_name", "INFO message " << " stream");
 
@@ -126,10 +180,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_INFO_STREAM_SKIPFIRST_NAMED("fancy_name", "INFO message " << " stream skip first 1");
   SPDLOG_ROS_INFO_STREAM_SKIPFIRST_NAMED("fancy_name", "INFO message " << " stream skip first 2");
 
-  SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "INFO message " << " stream throttle");
+  SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED("fancy_name", 100, "INFO message " << " stream throttle");
 
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "INFO message " << " stream throttle first 1");
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "INFO message " << " stream throttle first 2");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "INFO message " << " stream throttle first 1");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "INFO message " << " stream throttle first 2");
 
   SPDLOG_ROS_WARN("WARN message");
 
@@ -145,10 +199,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_WARN_SKIPFIRST("WARN message skip first 1");
   SPDLOG_ROS_WARN_SKIPFIRST("WARN message skip first 2");
 
-  SPDLOG_ROS_WARN_THROTTLE(*node->get_clock(), 100, "WARN message throttle");
+  SPDLOG_ROS_WARN_THROTTLE(100, "WARN message throttle");
 
-  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "WARN message throttle 1");
-  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "WARN message throttle 2");
+  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(100, "WARN message throttle 1");
+  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(100, "WARN message throttle 2");
 
   SPDLOG_ROS_WARN_STREAM("WARN message " << " stream");
 
@@ -164,10 +218,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_WARN_STREAM_SKIPFIRST("WARN message " << " stream skip first 1");
   SPDLOG_ROS_WARN_STREAM_SKIPFIRST("WARN message " << " stream skip first 2");
 
-  SPDLOG_ROS_WARN_STREAM_THROTTLE(*node->get_clock(), 100, "WARN message " << " stream throttle");
+  SPDLOG_ROS_WARN_STREAM_THROTTLE(100, "WARN message " << " stream throttle");
 
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "WARN message " << " stream throttle first 1");
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "WARN message " << " stream throttle first 2");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << " stream throttle first 1");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << " stream throttle first 2");
 
   SPDLOG_ROS_WARN_STREAM_NAMED("fancy_name", "WARN message " << " stream");
 
@@ -183,10 +237,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_WARN_STREAM_SKIPFIRST_NAMED("fancy_name", "WARN message " << " stream skip first 1");
   SPDLOG_ROS_WARN_STREAM_SKIPFIRST_NAMED("fancy_name", "WARN message " << " stream skip first 2");
 
-  SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "WARN message " << " stream throttle");
+  SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED("fancy_name", 100, "WARN message " << " stream throttle");
 
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "WARN message " << " stream throttle first 1");
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "WARN message " << " stream throttle first 2");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "WARN message " << " stream throttle first 1");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "WARN message " << " stream throttle first 2");
 
   SPDLOG_ROS_ERROR("ERROR message");
 
@@ -202,10 +256,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_ERROR_SKIPFIRST("ERROR message skip first 1");
   SPDLOG_ROS_ERROR_SKIPFIRST("ERROR message skip first 2");
 
-  SPDLOG_ROS_ERROR_THROTTLE(*node->get_clock(), 100, "ERROR message throttle");
+  SPDLOG_ROS_ERROR_THROTTLE(100, "ERROR message throttle");
 
-  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "ERROR message throttle 1");
-  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "ERROR message throttle 2");
+  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(100, "ERROR message throttle 1");
+  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(100, "ERROR message throttle 2");
 
   SPDLOG_ROS_ERROR_STREAM("ERROR message " << " stream");
 
@@ -221,10 +275,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_ERROR_STREAM_SKIPFIRST("ERROR message " << " stream skip first 1");
   SPDLOG_ROS_ERROR_STREAM_SKIPFIRST("ERROR message " << " stream skip first 2");
 
-  SPDLOG_ROS_ERROR_STREAM_THROTTLE(*node->get_clock(), 100, "ERROR message " << " stream throttle");
+  SPDLOG_ROS_ERROR_STREAM_THROTTLE(100, "ERROR message " << " stream throttle");
 
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "ERROR message " << " stream throttle first 1");
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "ERROR message " << " stream throttle first 2");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(100, "ERROR message " << " stream throttle first 1");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(100, "ERROR message " << " stream throttle first 2");
 
   SPDLOG_ROS_ERROR_STREAM_NAMED("fancy_name", "ERROR message " << " stream");
 
@@ -240,10 +294,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_NAMED("fancy_name", "ERROR message " << " stream skip first 1");
   SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_NAMED("fancy_name", "ERROR message " << " stream skip first 2");
 
-  SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "ERROR message " << " stream throttle");
+  SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED("fancy_name", 100, "ERROR message " << " stream throttle");
 
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "ERROR message " << " stream throttle first 1");
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "ERROR message " << " stream throttle first 2");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "ERROR message " << " stream throttle first 1");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "ERROR message " << " stream throttle first 2");
 
   SPDLOG_ROS_FATAL("FATAL message");
 
@@ -259,10 +313,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_FATAL_SKIPFIRST("FATAL message skip first 1");
   SPDLOG_ROS_FATAL_SKIPFIRST("FATAL message skip first 2");
 
-  SPDLOG_ROS_FATAL_THROTTLE(*node->get_clock(), 100, "FATAL message throttle");
+  SPDLOG_ROS_FATAL_THROTTLE(100, "FATAL message throttle");
 
-  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "FATAL message throttle 1");
-  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "FATAL message throttle 2");
+  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(100, "FATAL message throttle 1");
+  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(100, "FATAL message throttle 2");
 
   SPDLOG_ROS_FATAL_STREAM("FATAL message " << " stream");
 
@@ -278,10 +332,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_FATAL_STREAM_SKIPFIRST("FATAL message " << " stream skip first 1");
   SPDLOG_ROS_FATAL_STREAM_SKIPFIRST("FATAL message " << " stream skip first 2");
 
-  SPDLOG_ROS_FATAL_STREAM_THROTTLE(*node->get_clock(), 100, "FATAL message " << " stream throttle");
+  SPDLOG_ROS_FATAL_STREAM_THROTTLE(100, "FATAL message " << " stream throttle");
 
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "FATAL message " << " stream throttle first 1");
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(*node->get_clock(), 100, "FATAL message " << " stream throttle first 2");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(100, "FATAL message " << " stream throttle first 1");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(100, "FATAL message " << " stream throttle first 2");
 
   SPDLOG_ROS_FATAL_STREAM_NAMED("fancy_name", "FATAL message " << " stream");
 
@@ -297,10 +351,21 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_NAMED("fancy_name", "FATAL message " << " stream skip first 1");
   SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_NAMED("fancy_name", "FATAL message " << " stream skip first 2");
 
-  SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "FATAL message " << " stream throttle");
+  SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED("fancy_name", 100, "FATAL message " << " stream throttle");
 
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "FATAL message " << " stream throttle first 1");
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", *node->get_clock(), 100, "FATAL message " << " stream throttle first 2");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "FATAL message " << " stream throttle first 1");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED("fancy_name", 100, "FATAL message " << " stream throttle first 2");
+
+  // make an infinite loop to test throttling
+  while (rclcpp::ok())
+  {
+    SPDLOG_ROS_DEBUG("looping...");
+    SPDLOG_ROS_INFO_THROTTLE(1e3, "1s throttle");
+    SPDLOG_ROS_ERROR_THROTTLE(2e3, "2s throttle");
+    SPDLOG_ROS_FATAL_THROTTLE(5e3, "5s throttle");
+    rclcpp::spin_some(node);
+    rclcpp::sleep_for(std::chrono::milliseconds(100));
+  }
 
   return 0;
 }

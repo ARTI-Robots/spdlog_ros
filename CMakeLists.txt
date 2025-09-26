@@ -30,35 +30,59 @@ if ( ament_cmake_FOUND )
   find_package(rclcpp REQUIRED)
   find_package(rcl_interfaces REQUIRED)
   find_package(spdlog_vendor REQUIRED)
+  find_package(rosidl_default_generators REQUIRED)
 
-  add_library(${PROJECT_NAME} src/ros2_sink.cpp include/spdlog_ros/logging_macros.hpp include/spdlog_ros/ros_get_time_point.h include/spdlog_ros/get_time_point.h)
+  # Create the required messages and services to get and set the logger levels
+  # Note that the target version is ROS 2 Humble which does not yet have integrated services and messages for logging
+  # Beginning with ROS 2 Iron and upward, the existing service definitions of rcl_interfaces could be used:
+  # https://github.com/ros2/rcl_interfaces/blob/rolling/rcl_interfaces/README.md#services
 
-  target_link_libraries(${PROJECT_NAME}
-    spdlog::spdlog
+  set(msg_files
+    "msg/Logger.msg"
   )
-  ament_target_dependencies(${PROJECT_NAME}
+
+  set(srv_files
+    "srv/GetLoggers.srv"
+    "srv/SetLoggerLevel.srv"
+  )
+
+  rosidl_generate_interfaces(${PROJECT_NAME}
+    ${msg_files}
+    ${srv_files}
+  )
+
+  rosidl_get_typesupport_target(cpp_typesupport_target
+    ${PROJECT_NAME} rosidl_typesupport_cpp)
+
+  add_library(${PROJECT_NAME}_lib src/ros2_sink.cpp src/logger_manager.cpp src/ros2_logging.cpp)
+
+  target_link_libraries(${PROJECT_NAME}_lib
+    spdlog::spdlog
+    "${cpp_typesupport_target}"
+  )
+  ament_target_dependencies(${PROJECT_NAME}_lib
     spdlog_vendor
     rclcpp
     rcl_interfaces
   )
 
-  target_include_directories(${PROJECT_NAME} PUBLIC
+  target_include_directories(${PROJECT_NAME}_lib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
 
   add_executable(example_ros2 src/example_ros2.cpp)
-  target_link_libraries(example_ros2 ${PROJECT_NAME})
+  target_link_libraries(example_ros2 ${PROJECT_NAME}_lib "${cpp_typesupport_target}")
   target_include_directories(example_ros2 PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   )
 
   install(TARGETS
-  ${PROJECT_NAME}
-  example_ros2
-  DESTINATION lib/${PROJECT_NAME})
+    ${PROJECT_NAME}_lib
+    example_ros2
+    DESTINATION lib/${PROJECT_NAME})
 
-  ament_export_dependencies(spdlog_vendor rclcpp rcl_interfaces)
+  ament_export_dependencies(spdlog_vendor rclcpp rcl_interfaces rosidl_default_runtime)
   # ament_export_include_directories(include)  
   # ament_export_libraries(${PROJECT_NAME})
   ament_package()
@@ -79,7 +103,7 @@ else()
 
   include_directories(${catkin_INCLUDE_DIRS})
 
-  add_library(${PROJECT_NAME} src/ros_sink.cpp include/spdlog_ros/logging_macros.hpp include/spdlog_ros/logging.hpp include/spdlog_ros/ros2_get_time_point.h include/spdlog_ros/get_time_point.h)
+  add_library(${PROJECT_NAME} src/ros_sink.cpp src/logger_manager.cpp src/ros_logging.cpp)
   
   target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
