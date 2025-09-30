@@ -38,7 +38,16 @@ public:
   LoggerManager(const LoggerManager& other) = delete;
   LoggerManager& operator=(const LoggerManager& other) = delete;
 
-  static void CreateLoggerManager(const std::string& root_logger_name);
+  /**
+   * @brief Initializes the singleton Logger Manager with a base name
+   * 
+   * @note The log file name replaces slashes and dots in the base name with underscores
+   *       and prepends the current date and time. Multiple calls have no effect after
+   *       the first initialization.
+   *
+   * @param base_logger_name The base logger name
+   */
+  static void CreateLoggerManager(const std::string& base_logger_name);
 
   static std::shared_ptr<LoggerManager> GetLoggerManager();
 
@@ -66,7 +75,7 @@ public:
   void checkLogLocationEnabled(LoggerLocation* logger_status, const std::string& name);
 
 private:
-  LoggerManager(const std::string& root_logger_name);
+  LoggerManager(const std::string& base_logger_name);
 
   std::string getFullLoggerName(const std::string& name);
 
@@ -78,7 +87,7 @@ private:
 
   static std::shared_ptr<LoggerManager> instance_;
 
-  std::string root_logger_name_ = "";
+  std::string base_logger_name_ = "";
 
   std::vector<spdlog::sink_ptr> default_sinks_;
 

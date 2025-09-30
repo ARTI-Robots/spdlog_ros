@@ -156,7 +156,7 @@
  * Setup the logging status and update if required
  * This ensures that checking the log level is extremely cheap by just checking then outside if 
  * __spdlog_ros_logging_enabled_log_location.enabled is true
- * \param name The name of the logger (without the root logger name)
+ * \param name The name of the logger (without the base logger name)
  * \param severity The severity of the logging as spdlog::level::level_enum
  */
 #define SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
@@ -236,11 +236,11 @@
  */
 #define SPDLOG_ROS_GENERAL(severity, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         __VA_ARGS__); \
     } \
@@ -259,11 +259,11 @@
  */
 #define SPDLOG_ROS_GENERAL_ONCE(severity, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG_ONCE(     \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         __VA_ARGS__); \
     } \
@@ -283,11 +283,11 @@
  */
 #define SPDLOG_ROS_GENERAL_EXPRESSION(severity, expression, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         expression, \
         __VA_ARGS__); \
@@ -308,11 +308,11 @@
  */
 #define SPDLOG_ROS_GENERAL_FUNCTION(severity, function, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG_FUNCTION( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         function, \
         __VA_ARGS__); \
@@ -332,11 +332,11 @@
  */
 #define SPDLOG_ROS_GENERAL_SKIPFIRST(severity, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         __VA_ARGS__); \
     } \
@@ -356,11 +356,11 @@
  */
 #define SPDLOG_ROS_GENERAL_THROTTLE(severity, duration, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG_THROTTLE( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
@@ -383,11 +383,11 @@
  */
 #define SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(severity, duration, ...) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
@@ -406,13 +406,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM(severity, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG(                   \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -430,13 +430,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_NAMED(severity, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG(                   \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -454,13 +454,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_ONCE(severity, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_ONCE( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -479,13 +479,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_ONCE_NAMED(severity, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_ONCE( \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -504,13 +504,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_EXPRESSION(severity, expression, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         expression, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
@@ -531,13 +531,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_EXPRESSION_NAMED(severity, expression, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         expression, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
@@ -557,13 +557,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_FUNCTION(severity, function, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_FUNCTION( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         function, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
@@ -584,13 +584,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_FUNCTION_NAMED(severity, function, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_FUNCTION( \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         function, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
@@ -609,13 +609,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST(severity, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -634,13 +634,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_NAMED(severity, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         "{}", spllog_ros_stream_ss_.str().c_str()); \
     } \
@@ -659,13 +659,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_THROTTLE(severity, duration, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_THROTTLE( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
@@ -687,13 +687,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_THROTTLE_NAMED(severity, duration, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_THROTTLE( \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
@@ -715,13 +715,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE(severity, duration, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED("", severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_DEFAULT_NAME, severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
-        "", \
+        SPDLOG_ROS_DEFAULT_NAME, \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
@@ -744,13 +744,13 @@
  */
 #define SPDLOG_ROS_GENERAL_STREAM_SKIPFIRST_THROTTLE_NAMED(severity, duration, name, stream_arg) \
   do { \
-    SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
     if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
     { \
       std::stringstream spllog_ros_stream_ss_; \
       spllog_ros_stream_ss_ << stream_arg; \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
-        name, \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \

@@ -1,5 +1,6 @@
 #include "spdlog_ros/logger_manager.hpp"
 
+#include <string>
 #include <chrono>
 #include <ctime>
 #include <unordered_map>
@@ -17,9 +18,13 @@ namespace spdlog_ros
 // Definition of the static member
 std::shared_ptr<LoggerManager> LoggerManager::instance_ = nullptr;
 
-void LoggerManager::CreateLoggerManager(const std::string& root_logger_name)
+void LoggerManager::CreateLoggerManager(const std::string& base_logger_name)
 {
-  instance_ = std::shared_ptr<LoggerManager>(new LoggerManager(root_logger_name));
+  // Create LoggerManager only if not yet existing such that multiple calls do not have any side effects
+  if (!instance_)
+  {
+    instance_ = std::shared_ptr<LoggerManager>(new LoggerManager(base_logger_name));
+  }
 }
 
 std::shared_ptr<LoggerManager> LoggerManager::GetLoggerManager()
@@ -31,8 +36,8 @@ std::shared_ptr<LoggerManager> LoggerManager::GetLoggerManager()
   return instance_;
 }
 
-LoggerManager::LoggerManager(const std::string& root_logger_name)
-  : root_logger_name_(root_logger_name)
+LoggerManager::LoggerManager(const std::string& base_logger_name)
+  : base_logger_name_(base_logger_name)
 {
   spdlog::init_thread_pool(32768, 1); // queue with max 32k items 1 backing thread.
 
@@ -43,12 +48,12 @@ std::string LoggerManager::getFullLoggerName(const std::string& name)
 {
   std::string full_logger_name = "";
 
-  if (!root_logger_name_.empty())
+  if (!base_logger_name_.empty())
   {
-    full_logger_name += root_logger_name_;
+    full_logger_name += base_logger_name_;
   }
 
-  if (!root_logger_name_.empty() && !name.empty())
+  if (!base_logger_name_.empty() && !name.empty())
   {
     full_logger_name += ".";
   }
@@ -107,10 +112,17 @@ void LoggerManager::createDefaultSinks()
   char time_str[21];
   std::strftime(time_str, sizeof(time_str), "%Y-%m-%d_%H-%M-%SZ", &buf);
 
+  // Replace the possible slashes and dots of the base_logger_name with underscores
+  std::string cleaned_base_logger_name = base_logger_name_;
+  std::replace(cleaned_base_logger_name.begin(), cleaned_base_logger_name.end(), '.', '_');
+  std::replace(cleaned_base_logger_name.begin(), cleaned_base_logger_name.end(), '/', '_');
+  // If there is one or multiple underscores at the beginning now, remove it
+  cleaned_base_logger_name.erase(0, cleaned_base_logger_name.find_first_not_of('_'));
+
   // Create the full log file path
   // Example: /home/user/logfiles/my_logger_2023-10-05_14-30-00Z.log
-  // Note that if no root logger name is set (yet), the file name is just "_yyyy-mm-ddThh:mm:ssZ.log"
-  std::string log_file_path = log_dir + "/" + root_logger_name_ + "_" + std::string(time_str) + ".log";
+  // Note that if no base logger name is set (yet), the file name is just "_yyyy-mm-ddThh:mm:ssZ.log"
+  std::string log_file_path = log_dir + "/" + cleaned_base_logger_name + "_" + std::string(time_str) + ".log";
   static auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file_path, true);
   default_sinks_.push_back(file_sink);
 }
