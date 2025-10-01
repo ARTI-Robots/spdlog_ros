@@ -21,6 +21,8 @@ std::shared_ptr<LoggerManager> LoggerManager::instance_ = nullptr;
 void LoggerManager::CreateLoggerManager(const std::string& base_logger_name)
 {
   // Create LoggerManager only if not yet existing such that multiple calls do not have any side effects
+  static std::mutex create_logger_mutex;
+  const std::lock_guard<std::mutex> lock(create_logger_mutex);
   if (!instance_)
   {
     instance_ = std::shared_ptr<LoggerManager>(new LoggerManager(base_logger_name));
