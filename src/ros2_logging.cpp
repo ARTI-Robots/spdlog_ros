@@ -65,9 +65,11 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
   // export SPDLOG_LEVEL="off,node_name.named_logger1=debug,node_name.named_logger2=info"
   spdlog::cfg::load_env_levels();
 
-  // Set the root logger name, all loggers will be prefixed with this name
-  // Note that the file name for logging is "~/logfiles/{root_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
-  spdlog_ros::LoggerManager::CreateLoggerManager(node->get_name());
+  // Set the base logger name, all loggers will be prefixed with this name
+  // Note that the file name for logging is "~/logfiles/{cleaned_base_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
+  // where cleaned_base_logger_name is the base logger name with leading slash removed and all other slashes
+  // replaced with underscore
+  spdlog_ros::LoggerManager::CreateLoggerManager(node->get_fully_qualified_name());
 
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
   spdlog_ros::UseROSTime(node->get_clock());

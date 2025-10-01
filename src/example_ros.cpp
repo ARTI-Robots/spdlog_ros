@@ -34,7 +34,7 @@ int mainWithRos(int argc, char** argv)
   // // export SPDLOG_LEVEL="off,spdlog_ros_example.named_logger1=debug,spdlog_ros_example.named_logger2=info"
   // spdlog::cfg::load_env_levels();
 
-  // Set the root logger name, all loggers will be prefixed with this name (e.g. your ros node name)
+  // Set the base logger name, all loggers will be prefixed with this name (e.g. your ros node name)
   // If none is set, the logger name is directly the full logger name given at creation
   // Note that this should happen before all other calls to spdlog_ros such that the file name for logging
   // is set properly (otherwise the file name is just "~/logfiles/_yyyy-mm-ddThh:mm:ssZ.log")
@@ -54,7 +54,7 @@ int mainWithRos(int argc, char** argv)
   // create loggers on the fly when used with a new logger name
 
   // // Create an async logger that logs to the console, file and ROS (note that the logger name is prefixed
-  // // with the root logger name)
+  // // with the base logger name)
   // auto logger = spdlog_ros::LoggerManager::GetLoggerManager()->createAsyncLogger("my_logger");
   // // if one wants to use this logger everywhere, it needs to be registered to spdlog because
   // // otherwise the macros won't find it
