@@ -6,7 +6,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
-find_package(ament_cmake QUIET)
+find_package(ament_cmake_ros QUIET)
 find_package(spdlog REQUIRED)
 
 # ROS Version
@@ -20,7 +20,7 @@ endif()
 message(STATUS "ROS_VERSION=${ROS_VERSION}")
 add_compile_options(-D__ROS_VERSION=${ROS_VERSION})
 
-if ( ament_cmake_FOUND )
+if ( ament_cmake_ros_FOUND )
 
   add_definitions( -DUSING_ROS2 )
   message(STATUS "------------------------------------------")
@@ -77,13 +77,35 @@ if ( ament_cmake_FOUND )
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   )
 
-  install(TARGETS
-    ${PROJECT_NAME}_lib
-    example_ros2
+  install(
+    TARGETS example_ros2
     DESTINATION lib/${PROJECT_NAME})
+  
+  install(
+    TARGETS ${PROJECT_NAME}_lib
+    EXPORT export_${PROJECT_NAME}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+  
+  ## Mark header files for installation
+  install(DIRECTORY include/
+    DESTINATION include/${PROJECT_NAME}
+  )
 
-  ament_export_dependencies(spdlog_vendor rclcpp rcl_interfaces rosidl_default_runtime)
-  # ament_export_include_directories(include)  
+  ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+  ament_export_dependencies(
+    spdlog_vendor
+    rclcpp
+    rcl_interfaces
+    rosidl_default_runtime
+
+    # include ament_cmake_ros such that the ROS_PACKAGE_NAME macro works in downstream packages
+    # https://github.com/ros2/ament_cmake_ros/blob/rolling/ament_cmake_ros_core/ament_cmake_ros_core-extras.cmake.in#L18
+    ament_cmake_ros 
+  )
+  # ament_export_include_directories(include)
   # ament_export_libraries(${PROJECT_NAME})
   ament_package()
 
