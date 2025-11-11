@@ -34,9 +34,11 @@ void RosSink::log(const spdlog::details::log_msg& msg)
   log_msg.level = spdlog_ros::ConvertSeverityToROS(msg.level);
   log_msg.name = fmt::format("{}", msg.logger_name);
   log_msg.msg = fmt::format("{}", msg.payload);
-  auto sec = msg.time.time_since_epoch().count() / 1000000000;
-  auto nsec = msg.time.time_since_epoch().count() % 1000000000;
-  log_msg.header.stamp = ros::Time(sec, nsec);
+
+  auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(msg.time.time_since_epoch()).count();
+  auto sec_part = static_cast<uint32_t>(ns / 1000000000);
+  auto nsec_part = static_cast<uint32_t>(ns % 1000000000);
+  log_msg.header.stamp = ros::Time(sec_part, nsec_part);
 
   if(msg.source.filename)
   {

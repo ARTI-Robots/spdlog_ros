@@ -4,16 +4,32 @@
 
 #pragma once
 
+#include "ros/service_server.h"
 #include <roscpp/GetLoggers.h>
 #include <roscpp/SetLoggerLevel.h>
 
 namespace spdlog_ros
 {
 
-bool GetLoggersCallback(roscpp::GetLoggers::Request& req, roscpp::GetLoggers::Response& res);
+class ROSLoggingManager
+{
+public:
+  ROSLoggingManager(const ROSLoggingManager& other) = delete;
+  ROSLoggingManager& operator=(const ROSLoggingManager& other) = delete;
+  ROSLoggingManager();
+  ~ROSLoggingManager();
 
-bool SetLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLoggerLevel::Response& res);
+private:
+  bool getLoggersCallback(roscpp::GetLoggers::Request& req, roscpp::GetLoggers::Response& res);
 
-void SetUpROSLogging();
+  bool setLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLoggerLevel::Response& res);
+
+  void setUpROSLogging();
+
+  ros::ServiceServer get_loggers_srv_;
+  ros::ServiceServer set_logger_level_srv_;
+
+  static size_t reference_count_;
+};
 
 }  // namespace spdlog_ros

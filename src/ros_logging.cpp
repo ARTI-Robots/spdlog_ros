@@ -22,7 +22,32 @@
 namespace spdlog_ros
 {
 
-bool GetLoggersCallback(roscpp::GetLoggers::Request& /* req */, roscpp::GetLoggers::Response& res)
+size_t ROSLoggingManager::reference_count_ = 0;
+
+ROSLoggingManager::ROSLoggingManager()
+{
+  if (reference_count_ == 0)
+  {
+    // initialize once at the very first instantiation
+    // subsequent instantiations just increase the reference count
+    setUpROSLogging();
+  }
+
+  ++reference_count_;
+}
+
+ROSLoggingManager::~ROSLoggingManager()
+{
+  --reference_count_;
+
+  if (reference_count_ == 0)
+  {
+    // shutdown once only at the very last destruction
+    spdlog_ros::LoggerManager::GetLoggerManager()->shutdownLogging();
+  }
+}
+
+bool ROSLoggingManager::getLoggersCallback(roscpp::GetLoggers::Request& /* req */, roscpp::GetLoggers::Response& res)
 {
   res.loggers.clear();
 
@@ -37,7 +62,8 @@ bool GetLoggersCallback(roscpp::GetLoggers::Request& /* req */, roscpp::GetLogge
   return true;
 }
 
-bool SetLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLoggerLevel::Response& /* res */)
+bool ROSLoggingManager::setLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req,
+                                               roscpp::SetLoggerLevel::Response& /* res */)
 {
   spdlog_ros::LoggerManager::GetLoggerManager()->setLoggerLevel(
     req.logger, spdlog_ros::ConvertROSLogLevelToSpdlog(spdlog_ros::ConvertStringToROSLogLevel(req.level)));
@@ -45,7 +71,7 @@ bool SetLoggerLevelCallback(roscpp::SetLoggerLevel::Request& req, roscpp::SetLog
   return true;
 }
 
-void SetUpROSLogging()
+void ROSLoggingManager::setUpROSLogging()
 {
   // Load log levels from the environment variable SPDLOG_LEVEL
   // Note that this works for all existing as well as future loggers BUT the log levels need to match the spdlog levels
@@ -82,10 +108,10 @@ void SetUpROSLogging()
   spdlog_ros::LoggerManager::GetLoggerManager()->addSinkToDefaultSinks(ros_sink);
 
   // Create the services to get and set the logger levels at runtime
-  static auto get_loggers_srv = 
-    nh_priv.advertiseService("spdlog_ros/get_loggers", &spdlog_ros::GetLoggersCallback);
-  static auto set_logger_level_srv =
-    nh_priv.advertiseService("spdlog_ros/set_logger_level", &spdlog_ros::SetLoggerLevelCallback);
+  get_loggers_srv_ = nh_priv.advertiseService("spdlog_ros/get_loggers",
+    &ROSLoggingManager::getLoggersCallback, this);
+  set_logger_level_srv_ = nh_priv.advertiseService("spdlog_ros/set_logger_level",
+    &ROSLoggingManager::setLoggerLevelCallback, this);
 }
 
 }  // namespace spdlog_ros

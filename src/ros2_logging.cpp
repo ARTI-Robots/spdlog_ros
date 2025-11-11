@@ -19,8 +19,40 @@
 namespace spdlog_ros
 {
 
-bool GetLoggersCallback(
-  const std::shared_ptr<rmw_request_id_t> /* request_header */,
+size_t ROSLoggingManager::reference_count_ = 0;
+
+ROSLoggingManager::ROSLoggingManager(rclcpp::Node::SharedPtr node)
+{
+  if (reference_count_ == 0)
+  {
+    // initialize once at the very first instantiation
+    // subsequent instantiations just increase the reference count
+    setUpROSLogging(node);
+
+    auto ctx = rclcpp::contexts::get_global_default_context();
+    if (ctx)
+    {
+      ctx->add_pre_shutdown_callback([]() {
+        spdlog_ros::LoggerManager::GetLoggerManager()->shutdownLogging();
+      });
+    }
+  }
+
+  ++reference_count_;
+}
+
+ROSLoggingManager::~ROSLoggingManager()
+{
+  --reference_count_;
+
+  if (reference_count_ == 0)
+  {
+    // shutdown once only at the very last destruction
+    spdlog_ros::LoggerManager::GetLoggerManager()->shutdownLogging();
+  }
+}
+
+bool ROSLoggingManager::getLoggersCallback(
   const std::shared_ptr<spdlog_ros::srv::GetLoggers::Request> /* request */,
   const std::shared_ptr<spdlog_ros::srv::GetLoggers::Response> response)
 {
@@ -37,8 +69,7 @@ bool GetLoggersCallback(
   return true;
 }
 
-bool SetLoggerLevelCallback(
-  const std::shared_ptr<rmw_request_id_t> /* request_header */,
+bool ROSLoggingManager::setLoggerLevelCallback(
   const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Request> request,
   const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> /* response */)
 {
@@ -48,7 +79,7 @@ bool SetLoggerLevelCallback(
   return true;
 }
 
-void SetUpROSLogging(rclcpp::Node::SharedPtr node)
+void ROSLoggingManager::setUpROSLogging(rclcpp::Node::SharedPtr node)
 {
   // Load log levels from the environment variable SPDLOG_LEVEL
   // Note that this works for all existing as well as future loggers BUT the log levels need to match the spdlog levels
@@ -85,12 +116,12 @@ void SetUpROSLogging(rclcpp::Node::SharedPtr node)
   // Note that the target version is ROS 2 Humble which does not yet have integrated services and messages for logging
   // Beginning with ROS 2 Iron and upward, the existing service definitions of rcl_interfaces could be used:
   // https://github.com/ros2/rcl_interfaces/blob/rolling/rcl_interfaces/README.md#services
-  static auto get_loggers_srv = 
-    node->create_service<spdlog_ros::srv::GetLoggers>(
-      "~/spdlog_ros/get_loggers", &spdlog_ros::GetLoggersCallback);
-  static auto set_logger_level_srv =
-    node->create_service<spdlog_ros::srv::SetLoggerLevel>(
-      "~/spdlog_ros/set_logger_level", &spdlog_ros::SetLoggerLevelCallback);
+  get_loggers_srv_ = node->create_service<spdlog_ros::srv::GetLoggers>(
+    "~/spdlog_ros/get_loggers",
+    std::bind(&ROSLoggingManager::getLoggersCallback, this, std::placeholders::_1, std::placeholders::_2));
+  set_logger_level_srv_ = node->create_service<spdlog_ros::srv::SetLoggerLevel>(
+    "~/spdlog_ros/set_logger_level",
+    std::bind(&ROSLoggingManager::setLoggerLevelCallback, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 }  // namespace spdlog_ros

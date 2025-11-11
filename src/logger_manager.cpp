@@ -163,6 +163,16 @@ std::shared_ptr<spdlog::logger> LoggerManager::createAsyncLogger(
     spdlog::async_overflow_policy::overrun_oldest);
 }
 
+void LoggerManager::shutdownLogging()
+{
+  const std::lock_guard<std::mutex> lock(logger_map_mutex_);
+
+  logger_map_.clear();
+  default_sinks_.clear();
+  spdlog::drop_all();
+  spdlog::shutdown();
+}
+
 std::shared_ptr<spdlog::logger> LoggerManager::getLogger(
   const std::string& name, bool create_if_not_existing, bool add_default_sinks)
 {

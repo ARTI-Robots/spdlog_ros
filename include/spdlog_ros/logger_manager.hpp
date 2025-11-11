@@ -60,6 +60,8 @@ public:
   std::shared_ptr<spdlog::logger> getLogger(const std::string& name,
                                             bool create_if_not_existing = true,
                                             bool add_default_sinks = true);
+  
+  void shutdownLogging();
 
   std::function<spdlog_ros_utils_ret_t(spdlog_ros_utils_time_point_value_t*)>& getTimePointCallback();
 

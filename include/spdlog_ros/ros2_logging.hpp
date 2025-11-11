@@ -15,16 +15,29 @@
 namespace spdlog_ros
 {
 
-bool GetLoggersCallback(
-  const std::shared_ptr<rmw_request_id_t> request_header,
-  const std::shared_ptr<spdlog_ros::srv::GetLoggers::Request> request,
-  const std::shared_ptr<spdlog_ros::srv::GetLoggers::Response> response);
+class ROSLoggingManager
+{
+public:
+  ROSLoggingManager(const ROSLoggingManager& other) = delete;
+  ROSLoggingManager& operator=(const ROSLoggingManager& other) = delete;
+  ROSLoggingManager(rclcpp::Node::SharedPtr node);
+  ~ROSLoggingManager();
 
-bool SetLoggerLevelCallback(
-  const std::shared_ptr<rmw_request_id_t> request_header,
-  const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Request> request,
-  const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> response);
+private:
+  bool getLoggersCallback(
+    const std::shared_ptr<spdlog_ros::srv::GetLoggers::Request> request,
+    const std::shared_ptr<spdlog_ros::srv::GetLoggers::Response> response);
 
-void SetUpROSLogging(rclcpp::Node::SharedPtr node);
+  bool setLoggerLevelCallback(
+    const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Request> request,
+    const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> response);
+
+  void setUpROSLogging(rclcpp::Node::SharedPtr node);
+
+  rclcpp::Service<spdlog_ros::srv::GetLoggers>::SharedPtr get_loggers_srv_;
+  rclcpp::Service<spdlog_ros::srv::SetLoggerLevel>::SharedPtr set_logger_level_srv_;
+
+  static size_t reference_count_;
+};
 
 }  // namespace spdlog_ros

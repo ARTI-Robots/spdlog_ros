@@ -13,7 +13,7 @@ int mainWithRos(int argc, char** argv)
   ros::NodeHandle node;
 
   // Set up ROS logging
-  spdlog_ros::SetUpROSLogging();
+  spdlog_ros::ROSLoggingManager ros_logging_manager{};
 
   // As an alternative to the above setup function, one could also do the following manually here.
   // This is however missing the service setup for getting/setting logger levels at runtime
@@ -61,6 +61,10 @@ int mainWithRos(int argc, char** argv)
   // spdlog::initialize_logger(logger);
   // // Optionally, make this the default logger, accessible globally (registering is not required then)
   // spdlog::set_default_logger(logger);
+
+  // // after all logging at shutdown shut down the logger manager
+  // // by using the ROSLoggingManager this happens automatically at destruction of the last instance of it
+  // spdlog_ros::LoggerManager::GetLoggerManager()->shutdownLogging();
 
   // // Log some messages
   // logger->info("Hello, world!");
