@@ -24,6 +24,7 @@
 
 #include <spdlog/spdlog.h>
 #include "spdlog_ros/logger_manager.hpp"
+#include <sstream>
 
 // The SPDLOG_ROS_UTILS_LOG_COND macro is surrounded by do { .. } while (0) to implement
 // the standard C macro idiom to make the macro safe in all contexts; see
