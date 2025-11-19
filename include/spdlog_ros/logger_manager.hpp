@@ -24,9 +24,14 @@ public:
 
   struct LoggerLocation
   {
-    bool initialized = false;
-    bool enabled = false;
-    spdlog::level::level_enum level = spdlog::level::debug;
+    LoggerLocation(bool initialized = false,
+                   bool enabled = false,
+                   spdlog::level::level_enum level = spdlog::level::debug)
+      : initialized(initialized), enabled(enabled), level(level) {}
+
+    bool initialized;
+    bool enabled;
+    spdlog::level::level_enum level;
   };
 
   struct LoggerEntry

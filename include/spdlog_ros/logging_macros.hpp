@@ -161,7 +161,7 @@
  * \param severity The severity of the logging as spdlog::level::level_enum
  */
 #define SPDLOG_ROS_LOGGING_ENABLED(name, severity) \
-  static spdlog_ros::LoggerManager::LoggerLocation __spdlog_ros_logging_enabled_log_location = {false, false, SPDLOG_ROS_LEVEL_DEBUG}; /* Initialized at compile-time */ \
+  static spdlog_ros::LoggerManager::LoggerLocation __spdlog_ros_logging_enabled_log_location{false, false, SPDLOG_ROS_LEVEL_DEBUG}; /* Initialized at compile-time */ \
   if (SPDLOG_ROS_UTILS_UNLIKELY(!__spdlog_ros_logging_enabled_log_location.initialized)) \
   { \
     spdlog_ros::LoggerManager::GetLoggerManager()->initializeLogLocation(&__spdlog_ros_logging_enabled_log_location, name, severity); \
