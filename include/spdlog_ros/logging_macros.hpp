@@ -135,7 +135,7 @@
     bool __spdlog_ros_utils_logging_condition = true; \
     if (get_time_point_value(&__spdlog_ros_utils_logging_now) != SPDLOG_ROS_UTILS_RET_OK) { \
       SPDLOG_ERROR( \
-        "%s() at %s:%d getting current steady time failed\n", \
+        "{}() at {}:{} getting current steady time failed\n", \
         __func__, __FILE__, __LINE__); \
     } else { \
       __spdlog_ros_utils_logging_condition = __spdlog_ros_utils_logging_now >= __spdlog_ros_utils_logging_last_logged + __spdlog_ros_utils_logging_duration; \
