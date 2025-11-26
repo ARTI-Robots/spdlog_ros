@@ -30,3 +30,12 @@ ROS2:
 ```bash
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
 ```
+
+## Quick usage guide
+
+1. Set up logger as defined in `example_ros.cpp` or `example_ros2.cpp`
+    - Note that at shutdown of the node the `ROSLoggingManager` should be destructed such that the logging properly shuts down without crash at the end
+    - The easiest way to do this is in RAII-style as shown in `example_ros.cpp` and `example_ros2.cpp`
+    - Also note that multiple initializations of `ROSLoggingManager` does not harm and only when the last `ROSLoggingManager` is getting destructed, the logging is shut down
+2. Log using `SPDLOG_ROS_*` similar to logging with ROS 1
+    - Note that format strings are **not** using the ROS 1 / printf syntax but instead the syntax of the {fmt} library (see examples in `example_ros.cpp` and `example_ros2.cpp`)
