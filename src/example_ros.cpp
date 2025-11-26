@@ -134,6 +134,19 @@ int mainWithRos(int argc, char** argv)
 
   SPDLOG_ROS_INFO("INFO message");
 
+  // Format string is defined with the {fmt} library
+  // (on Ubuntu 20.04 / ROS 1 Noetic {fmt} has version 6.2.1 (https://fmt.dev/6.2/))
+  SPDLOG_ROS_INFO("INFO message with char: {}", 'g');
+  SPDLOG_ROS_INFO("INFO message with char string: {}", "test string");
+  SPDLOG_ROS_INFO("INFO message with signed int: {}", int(5));
+  SPDLOG_ROS_INFO("INFO message with unsigned int: {}", uint(5));
+  SPDLOG_ROS_INFO("INFO message with unsigned int binary: {:#b}", uint(5));
+  SPDLOG_ROS_INFO("INFO message with unsigned int oct: {:#o}", uint(5));
+  SPDLOG_ROS_INFO("INFO message with unsigned int hex: {:#x}", uint(5));
+  SPDLOG_ROS_INFO("INFO message with float: {}", double(12.345));
+  SPDLOG_ROS_INFO("INFO message with float exponent: {:e}", double(12.345));
+  SPDLOG_ROS_INFO("INFO message with multiple: {0}, {1}", int(5), double(12.345));
+
   SPDLOG_ROS_INFO_ONCE("INFO message once");
   SPDLOG_ROS_INFO_ONCE("INFO message once");
 
