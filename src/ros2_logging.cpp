@@ -22,12 +22,33 @@ namespace spdlog_ros
 size_t ROSLoggingManager::reference_count_ = 0;
 
 ROSLoggingManager::ROSLoggingManager(rclcpp::Node::SharedPtr node)
+  : ROSLoggingManager(
+      node->get_node_base_interface(),
+      node->get_node_clock_interface(),
+      node->get_node_topics_interface(),
+      node->get_node_services_interface(),
+      node->get_node_parameters_interface())
+{
+}
+
+ROSLoggingManager::ROSLoggingManager(
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr base_interface,
+  rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface,
+  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
+  rclcpp::node_interfaces::NodeServicesInterface::SharedPtr services_interface,
+  rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface
+)
 {
   if (reference_count_ == 0)
   {
     // initialize once at the very first instantiation
     // subsequent instantiations just increase the reference count
-    setUpROSLogging(node);
+    setUpROSLogging(
+      base_interface,
+      clock_interface,
+      topics_interface,
+      services_interface,
+      parameters_interface);
 
     auto ctx = rclcpp::contexts::get_global_default_context();
     if (ctx)
@@ -81,6 +102,21 @@ bool ROSLoggingManager::setLoggerLevelCallback(
 
 void ROSLoggingManager::setUpROSLogging(rclcpp::Node::SharedPtr node)
 {
+  setUpROSLogging(
+    node->get_node_base_interface(),
+    node->get_node_clock_interface(),
+    node->get_node_topics_interface(),
+    node->get_node_services_interface(),
+    node->get_node_parameters_interface());
+}
+
+void ROSLoggingManager::setUpROSLogging(
+  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr base_interface,
+  rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface,
+  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
+  rclcpp::node_interfaces::NodeServicesInterface::SharedPtr services_interface,
+  rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface)
+{
   // Load log levels from the environment variable SPDLOG_LEVEL
   // Note that this works for all existing as well as future loggers BUT the log levels need to match the spdlog levels
   // and NOT the ROS log levels
@@ -100,13 +136,13 @@ void ROSLoggingManager::setUpROSLogging(rclcpp::Node::SharedPtr node)
   // Note that the file name for logging is "~/logfiles/{cleaned_base_logger_name}_yyyy-mm-ddThh:mm:ssZ.log")
   // where cleaned_base_logger_name is the base logger name with leading slash removed and all other slashes
   // replaced with underscore
-  spdlog_ros::LoggerManager::CreateLoggerManager(node->get_fully_qualified_name());
+  spdlog_ros::LoggerManager::CreateLoggerManager(base_interface->get_fully_qualified_name());
 
   // Set up spdlog_ros to use the ROS time (instead of the default std::chrono time)
-  spdlog_ros::UseROSTime(node->get_clock());
+  spdlog_ros::UseROSTime(clock_interface->get_clock());
 
   // Create a ROS sink
-  auto ros_sink = std::make_shared<spdlog_ros::RosSink>(node);
+  auto ros_sink = std::make_shared<spdlog_ros::RosSink>(topics_interface, parameters_interface);
 
   // The default sinks are stdout/stderr and file logging
   // When adding here a default sink, all other loggers will have that sink
@@ -116,12 +152,14 @@ void ROSLoggingManager::setUpROSLogging(rclcpp::Node::SharedPtr node)
   // Note that the target version is ROS 2 Humble which does not yet have integrated services and messages for logging
   // Beginning with ROS 2 Iron and upward, the existing service definitions of rcl_interfaces could be used:
   // https://github.com/ros2/rcl_interfaces/blob/rolling/rcl_interfaces/README.md#services
-  get_loggers_srv_ = node->create_service<spdlog_ros::srv::GetLoggers>(
-    "~/spdlog_ros/get_loggers",
-    std::bind(&ROSLoggingManager::getLoggersCallback, this, std::placeholders::_1, std::placeholders::_2));
-  set_logger_level_srv_ = node->create_service<spdlog_ros::srv::SetLoggerLevel>(
-    "~/spdlog_ros/set_logger_level",
-    std::bind(&ROSLoggingManager::setLoggerLevelCallback, this, std::placeholders::_1, std::placeholders::_2));
+  get_loggers_srv_ = rclcpp::create_service<spdlog_ros::srv::GetLoggers>(
+    base_interface, services_interface, "~/spdlog_ros/get_loggers",
+    std::bind(&ROSLoggingManager::getLoggersCallback, this, std::placeholders::_1, std::placeholders::_2),
+    rmw_qos_profile_services_default, nullptr);
+  set_logger_level_srv_ = rclcpp::create_service<spdlog_ros::srv::SetLoggerLevel>(
+    base_interface, services_interface, "~/spdlog_ros/set_logger_level",
+    std::bind(&ROSLoggingManager::setLoggerLevelCallback, this, std::placeholders::_1, std::placeholders::_2),
+    rmw_qos_profile_services_default, nullptr);
 }
 
 }  // namespace spdlog_ros

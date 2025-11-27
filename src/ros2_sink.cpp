@@ -14,17 +14,22 @@ RosSink::~RosSink() {}
 //Pimpl idiom
 struct RosSink::Pimpl
 {
-  rclcpp::Node::SharedPtr node;
   rclcpp::Publisher<rcl_interfaces::msg::Log>::SharedPtr log_publisher;
   std::mutex mutex;
 };
 
-RosSink::RosSink(rclcpp::Node::SharedPtr node): pimpl_(std::make_unique<Pimpl>())
+RosSink::RosSink(rclcpp::Node::SharedPtr node)
+  : RosSink(node->get_node_topics_interface(), node->get_node_parameters_interface())
 {
-  pimpl_->node = node;
-  pimpl_->log_publisher = pimpl_->node->create_publisher<rcl_interfaces::msg::Log>("rosout", rclcpp::RosoutQoS());
 }
 
+RosSink::RosSink(
+  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
+  rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface): pimpl_(std::make_unique<Pimpl>())
+{
+  pimpl_->log_publisher = rclcpp::create_publisher<rcl_interfaces::msg::Log>(
+    parameters_interface, topics_interface, "rosout", rclcpp::RosoutQoS());
+}
 
 void RosSink::log(const spdlog::details::log_msg& msg)
 {

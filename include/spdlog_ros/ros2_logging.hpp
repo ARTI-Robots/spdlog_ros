@@ -20,7 +20,15 @@ class ROSLoggingManager
 public:
   ROSLoggingManager(const ROSLoggingManager& other) = delete;
   ROSLoggingManager& operator=(const ROSLoggingManager& other) = delete;
+
   ROSLoggingManager(rclcpp::Node::SharedPtr node);
+  ROSLoggingManager(
+    rclcpp::node_interfaces::NodeBaseInterface::SharedPtr base_interface,
+    rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface,
+    rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
+    rclcpp::node_interfaces::NodeServicesInterface::SharedPtr services_interface,
+    rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface);
+
   ~ROSLoggingManager();
 
 private:
@@ -33,6 +41,13 @@ private:
     const std::shared_ptr<spdlog_ros::srv::SetLoggerLevel::Response> response);
 
   void setUpROSLogging(rclcpp::Node::SharedPtr node);
+  void setUpROSLogging(
+    rclcpp::node_interfaces::NodeBaseInterface::SharedPtr base_interface,
+    rclcpp::node_interfaces::NodeClockInterface::SharedPtr clock_interface,
+    rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
+    rclcpp::node_interfaces::NodeServicesInterface::SharedPtr services_interface,
+    rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface
+  );
 
   rclcpp::Service<spdlog_ros::srv::GetLoggers>::SharedPtr get_loggers_srv_;
   rclcpp::Service<spdlog_ros::srv::SetLoggerLevel>::SharedPtr set_logger_level_srv_;

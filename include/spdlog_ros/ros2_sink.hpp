@@ -10,6 +10,8 @@ class RosSink : public spdlog::sinks::sink
 {
 public:
   RosSink(rclcpp::Node::SharedPtr node);
+  RosSink(rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
+          rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface);
 
   RosSink(const RosSink& other) = delete;
   RosSink& operator=(const RosSink& other) = delete;
