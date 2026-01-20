@@ -28,6 +28,16 @@ public:
     rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr topics_interface,
     rclcpp::node_interfaces::NodeServicesInterface::SharedPtr services_interface,
     rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface);
+  
+  template <typename NodeT>
+  ROSLoggingManager(NodeT node)
+    : ROSLoggingManager(node.get_node_base_interface(),
+                        node.get_node_clock_interface(),
+                        node.get_node_topics_interface(),
+                        node.get_node_services_interface(),
+                        node.get_node_parameters_interface())
+  {
+  }
 
   ~ROSLoggingManager();
 
