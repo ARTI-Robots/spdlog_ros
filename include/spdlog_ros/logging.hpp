@@ -18,17 +18,31 @@
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_ONCE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_ONCE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_EXPRESSION(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_EXPRESSION_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_FUNCTION(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_FUNCTION_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_SKIPFIRST(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_SKIPFIRST_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_THROTTLE(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_THROTTLE_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_DEBUG_STREAM(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
@@ -70,6 +84,17 @@
  */
 #define SPDLOG_ROS_DEBUG(...) SPDLOG_ROS_GENERAL(SPDLOG_ROS_LEVEL_DEBUG, __VA_ARGS__)
 
+// The SPDLOG_ROS_DEBUG_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_NAMED
+ * Log a message with severity DEBUG using a named logger.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_NAMED(name, ...) SPDLOG_ROS_GENERAL_NAMED(SPDLOG_ROS_LEVEL_DEBUG, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_DEBUG_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -81,6 +106,18 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_DEBUG_ONCE(...) SPDLOG_ROS_GENERAL_ONCE(SPDLOG_ROS_LEVEL_DEBUG, __VA_ARGS__)
+
+// The SPDLOG_ROS_DEBUG_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_ONCE_NAMED
+ * Log a message with severity DEBUG using a named logger.
+ * All subsequent log calls except the first one are being ignored.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_ONCE_NAMED(name, ...) SPDLOG_ROS_GENERAL_ONCE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_DEBUG_EXPRESSION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -95,6 +132,18 @@
  */
 #define SPDLOG_ROS_DEBUG_EXPRESSION(expression, ...) SPDLOG_ROS_GENERAL_EXPRESSION(SPDLOG_ROS_LEVEL_DEBUG, expression, __VA_ARGS__)
 
+// The SPDLOG_ROS_DEBUG_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_EXPRESSION_NAMED
+ * Log a message with severity DEBUG using a named logger when expression is true.
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_EXPRESSION_NAMED(expression, name, ...) SPDLOG_ROS_GENERAL_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_DEBUG, expression, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_DEBUG_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -108,6 +157,18 @@
  */
 #define SPDLOG_ROS_DEBUG_FUNCTION(function, ...) SPDLOG_ROS_GENERAL_FUNCTION(SPDLOG_ROS_LEVEL_DEBUG, function, __VA_ARGS__)
 
+// The SPDLOG_ROS_DEBUG_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_FUNCTION_NAMED
+ * Log a message with severity DEBUG using a named logger when function returns true.
+ * \param function The function return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_FUNCTION_NAMED(function, name, ...) SPDLOG_ROS_GENERAL_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_DEBUG, function, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_DEBUG_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -119,6 +180,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_DEBUG_SKIPFIRST(...) SPDLOG_ROS_GENERAL_SKIPFIRST(SPDLOG_ROS_LEVEL_DEBUG, __VA_ARGS__)
+
+// The SPDLOG_ROS_DEBUG_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_SKIPFIRST_NAMED
+ * Log a message with severity DEBUG using a named logger, skipping the first call.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_SKIPFIRST_NAMED(name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED(SPDLOG_ROS_LEVEL_DEBUG, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_DEBUG_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -133,6 +205,18 @@
  */
 #define SPDLOG_ROS_DEBUG_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, duration, __VA_ARGS__)
 
+// The SPDLOG_ROS_DEBUG_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_THROTTLE_NAMED
+ * Log a message with severity DEBUG using a named logger with throttling.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -146,6 +230,18 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_DEBUG, duration, __VA_ARGS__)
+
+// The SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with severity DEBUG using a named logger, skipping the first call and throttling subsequent calls.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_DEBUG, duration, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_DEBUG_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -326,17 +422,31 @@
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_ONCE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_ONCE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_EXPRESSION(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_EXPRESSION_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_FUNCTION(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_FUNCTION_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_SKIPFIRST(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_SKIPFIRST_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_THROTTLE(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_THROTTLE_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_INFO_STREAM(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
@@ -378,6 +488,17 @@
  */
 #define SPDLOG_ROS_INFO(...) SPDLOG_ROS_GENERAL(SPDLOG_ROS_LEVEL_INFO, __VA_ARGS__)
 
+// The SPDLOG_ROS_INFO_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_NAMED
+ * Log a message with severity INFO using a named logger.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_NAMED(name, ...) SPDLOG_ROS_GENERAL_NAMED(SPDLOG_ROS_LEVEL_INFO, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_INFO_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -389,6 +510,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_INFO_ONCE(...) SPDLOG_ROS_GENERAL_ONCE(SPDLOG_ROS_LEVEL_INFO, __VA_ARGS__)
+
+// The SPDLOG_ROS_INFO_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_ONCE_NAMED
+ * Log a message with severity INFO using a named logger; subsequent calls are ignored.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_ONCE_NAMED(name, ...) SPDLOG_ROS_GENERAL_ONCE_NAMED(SPDLOG_ROS_LEVEL_INFO, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_INFO_EXPRESSION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -403,6 +535,18 @@
  */
 #define SPDLOG_ROS_INFO_EXPRESSION(expression, ...) SPDLOG_ROS_GENERAL_EXPRESSION(SPDLOG_ROS_LEVEL_INFO, expression, __VA_ARGS__)
 
+// The SPDLOG_ROS_INFO_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_EXPRESSION_NAMED
+ * Log a message with severity INFO using a named logger when expression is true.
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_EXPRESSION_NAMED(expression, name, ...) SPDLOG_ROS_GENERAL_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_INFO, expression, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_INFO_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -416,6 +560,18 @@
  */
 #define SPDLOG_ROS_INFO_FUNCTION(function, ...) SPDLOG_ROS_GENERAL_FUNCTION(SPDLOG_ROS_LEVEL_INFO, function, __VA_ARGS__)
 
+// The SPDLOG_ROS_INFO_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_FUNCTION_NAMED
+ * Log a message with severity INFO using a named logger when function returns true.
+ * \param function The function return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_FUNCTION_NAMED(function, name, ...) SPDLOG_ROS_GENERAL_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_INFO, function, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_INFO_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -427,6 +583,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_INFO_SKIPFIRST(...) SPDLOG_ROS_GENERAL_SKIPFIRST(SPDLOG_ROS_LEVEL_INFO, __VA_ARGS__)
+
+// The SPDLOG_ROS_INFO_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_SKIPFIRST_NAMED
+ * Log a message with severity INFO using a named logger, skipping the first call.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_SKIPFIRST_NAMED(name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED(SPDLOG_ROS_LEVEL_INFO, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_INFO_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -441,6 +608,18 @@
  */
 #define SPDLOG_ROS_INFO_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_INFO, duration, __VA_ARGS__)
 
+// The SPDLOG_ROS_INFO_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_THROTTLE_NAMED
+ * Log a message with severity INFO using a named logger with throttling.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -454,6 +633,18 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_INFO, duration, __VA_ARGS__)
+
+// The SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with severity INFO using a named logger, skipping the first call and throttling subsequent calls.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_INFO, duration, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_INFO_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -634,17 +825,31 @@
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_ONCE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_ONCE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_EXPRESSION(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_EXPRESSION_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_FUNCTION(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_FUNCTION_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_SKIPFIRST(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_SKIPFIRST_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_THROTTLE(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_THROTTLE_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_WARN_STREAM(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
@@ -686,6 +891,17 @@
  */
 #define SPDLOG_ROS_WARN(...) SPDLOG_ROS_GENERAL(SPDLOG_ROS_LEVEL_WARN, __VA_ARGS__)
 
+// The SPDLOG_ROS_WARN_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_NAMED
+ * Log a message with severity WARN using a named logger.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_NAMED(name, ...) SPDLOG_ROS_GENERAL_NAMED(SPDLOG_ROS_LEVEL_WARN, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_WARN_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -697,6 +913,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_WARN_ONCE(...) SPDLOG_ROS_GENERAL_ONCE(SPDLOG_ROS_LEVEL_WARN, __VA_ARGS__)
+
+// The SPDLOG_ROS_WARN_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_ONCE_NAMED
+ * Log a message with severity WARN using a named logger; subsequent calls are ignored.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_ONCE_NAMED(name, ...) SPDLOG_ROS_GENERAL_ONCE_NAMED(SPDLOG_ROS_LEVEL_WARN, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_WARN_EXPRESSION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -711,6 +938,18 @@
  */
 #define SPDLOG_ROS_WARN_EXPRESSION(expression, ...) SPDLOG_ROS_GENERAL_EXPRESSION(SPDLOG_ROS_LEVEL_WARN, expression, __VA_ARGS__)
 
+// The SPDLOG_ROS_WARN_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_EXPRESSION_NAMED
+ * Log a message with severity WARN using a named logger when expression is true.
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_EXPRESSION_NAMED(expression, name, ...) SPDLOG_ROS_GENERAL_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_WARN, expression, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_WARN_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -724,6 +963,18 @@
  */
 #define SPDLOG_ROS_WARN_FUNCTION(function, ...) SPDLOG_ROS_GENERAL_FUNCTION(SPDLOG_ROS_LEVEL_WARN, function, __VA_ARGS__)
 
+// The SPDLOG_ROS_WARN_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_FUNCTION_NAMED
+ * Log a message with severity WARN using a named logger when function returns true.
+ * \param function The function return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_FUNCTION_NAMED(function, name, ...) SPDLOG_ROS_GENERAL_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_WARN, function, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_WARN_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -735,6 +986,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_WARN_SKIPFIRST(...) SPDLOG_ROS_GENERAL_SKIPFIRST(SPDLOG_ROS_LEVEL_WARN, __VA_ARGS__)
+
+// The SPDLOG_ROS_WARN_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_SKIPFIRST_NAMED
+ * Log a message with severity WARN using a named logger, skipping the first call.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_SKIPFIRST_NAMED(name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED(SPDLOG_ROS_LEVEL_WARN, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_WARN_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -749,6 +1011,18 @@
  */
 #define SPDLOG_ROS_WARN_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_WARN, duration, __VA_ARGS__)
 
+// The SPDLOG_ROS_WARN_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_THROTTLE_NAMED
+ * Log a message with severity WARN using a named logger with throttling.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -762,6 +1036,18 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_WARN, duration, __VA_ARGS__)
+
+// The SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with severity WARN using a named logger, skipping the first call and throttling subsequent calls.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_WARN, duration, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_WARN_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -943,17 +1229,31 @@
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_ONCE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_ONCE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_EXPRESSION(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_EXPRESSION_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_FUNCTION(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_FUNCTION_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_SKIPFIRST(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_SKIPFIRST_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_THROTTLE(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_THROTTLE_NAMED(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(...)
+/// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
+#define SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
 #define SPDLOG_ROS_ERROR_STREAM(...)
 /// Empty logging macro due to the preprocessor definition of RCLCPP_LOG_MIN_SEVERITY.
@@ -995,6 +1295,17 @@
  */
 #define SPDLOG_ROS_ERROR(...) SPDLOG_ROS_GENERAL(SPDLOG_ROS_LEVEL_ERROR, __VA_ARGS__)
 
+// The SPDLOG_ROS_ERROR_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_NAMED
+ * Log a message with severity ERROR using a named logger.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_NAMED(name, ...) SPDLOG_ROS_GENERAL_NAMED(SPDLOG_ROS_LEVEL_ERROR, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_ERROR_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1006,6 +1317,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_ERROR_ONCE(...) SPDLOG_ROS_GENERAL_ONCE(SPDLOG_ROS_LEVEL_ERROR, __VA_ARGS__)
+
+// The SPDLOG_ROS_ERROR_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_ONCE_NAMED
+ * Log a message with severity ERROR using a named logger; subsequent calls are ignored.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_ONCE_NAMED(name, ...) SPDLOG_ROS_GENERAL_ONCE_NAMED(SPDLOG_ROS_LEVEL_ERROR, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_ERROR_EXPRESSION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1020,6 +1342,18 @@
  */
 #define SPDLOG_ROS_ERROR_EXPRESSION(expression, ...) SPDLOG_ROS_GENERAL_EXPRESSION(SPDLOG_ROS_LEVEL_ERROR, expression, __VA_ARGS__)
 
+// The SPDLOG_ROS_ERROR_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_EXPRESSION_NAMED
+ * Log a message with severity ERROR using a named logger when expression is true.
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_EXPRESSION_NAMED(expression, name, ...) SPDLOG_ROS_GENERAL_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_ERROR, expression, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_ERROR_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1033,6 +1367,18 @@
  */
 #define SPDLOG_ROS_ERROR_FUNCTION(function, ...) SPDLOG_ROS_GENERAL_FUNCTION(SPDLOG_ROS_LEVEL_ERROR, function, __VA_ARGS__)
 
+// The SPDLOG_ROS_ERROR_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_FUNCTION_NAMED
+ * Log a message with severity ERROR using a named logger when function returns true.
+ * \param function The function return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_FUNCTION_NAMED(function, name, ...) SPDLOG_ROS_GENERAL_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_ERROR, function, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_ERROR_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1044,6 +1390,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_ERROR_SKIPFIRST(...) SPDLOG_ROS_GENERAL_SKIPFIRST(SPDLOG_ROS_LEVEL_ERROR, __VA_ARGS__)
+
+// The SPDLOG_ROS_ERROR_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_SKIPFIRST_NAMED
+ * Log a message with severity ERROR using a named logger, skipping the first call.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_SKIPFIRST_NAMED(name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED(SPDLOG_ROS_LEVEL_ERROR, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_ERROR_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1058,6 +1415,18 @@
  */
 #define SPDLOG_ROS_ERROR_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, duration, __VA_ARGS__)
 
+// The SPDLOG_ROS_ERROR_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_THROTTLE_NAMED
+ * Log a message with severity ERROR using a named logger with throttling.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1071,6 +1440,18 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_ERROR, duration, __VA_ARGS__)
+
+// The SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with severity ERROR using a named logger, skipping the first call and throttling subsequent calls.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_ERROR, duration, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_ERROR_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1255,6 +1636,17 @@
  */
 #define SPDLOG_ROS_FATAL(...) SPDLOG_ROS_GENERAL(SPDLOG_ROS_LEVEL_FATAL, __VA_ARGS__)
 
+// The SPDLOG_ROS_FATAL_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_NAMED
+ * Log a message with severity FATAL using a named logger.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_NAMED(name, ...) SPDLOG_ROS_GENERAL_NAMED(SPDLOG_ROS_LEVEL_FATAL, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_FATAL_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1266,6 +1658,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_FATAL_ONCE(...) SPDLOG_ROS_GENERAL_ONCE(SPDLOG_ROS_LEVEL_FATAL, __VA_ARGS__)
+
+// The SPDLOG_ROS_FATAL_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_ONCE_NAMED
+ * Log a message with severity FATAL using a named logger; subsequent calls are ignored.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_ONCE_NAMED(name, ...) SPDLOG_ROS_GENERAL_ONCE_NAMED(SPDLOG_ROS_LEVEL_FATAL, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_FATAL_EXPRESSION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1280,6 +1683,18 @@
  */
 #define SPDLOG_ROS_FATAL_EXPRESSION(expression, ...) SPDLOG_ROS_GENERAL_EXPRESSION(SPDLOG_ROS_LEVEL_FATAL, expression, __VA_ARGS__)
 
+// The SPDLOG_ROS_FATAL_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_EXPRESSION_NAMED
+ * Log a message with severity FATAL using a named logger when expression is true.
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_EXPRESSION_NAMED(expression, name, ...) SPDLOG_ROS_GENERAL_EXPRESSION_NAMED(SPDLOG_ROS_LEVEL_FATAL, expression, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_FATAL_FUNCTION macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1293,6 +1708,18 @@
  */
 #define SPDLOG_ROS_FATAL_FUNCTION(function, ...) SPDLOG_ROS_GENERAL_FUNCTION(SPDLOG_ROS_LEVEL_FATAL, function, __VA_ARGS__)
 
+// The SPDLOG_ROS_FATAL_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_FUNCTION_NAMED
+ * Log a message with severity FATAL using a named logger when function returns true.
+ * \param function The function return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_FUNCTION_NAMED(function, name, ...) SPDLOG_ROS_GENERAL_FUNCTION_NAMED(SPDLOG_ROS_LEVEL_FATAL, function, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_FATAL_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1304,6 +1731,17 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_FATAL_SKIPFIRST(...) SPDLOG_ROS_GENERAL_SKIPFIRST(SPDLOG_ROS_LEVEL_FATAL, __VA_ARGS__)
+
+// The SPDLOG_ROS_FATAL_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_SKIPFIRST_NAMED
+ * Log a message with severity FATAL using a named logger, skipping the first call.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_SKIPFIRST_NAMED(name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED(SPDLOG_ROS_LEVEL_FATAL, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_FATAL_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
@@ -1318,6 +1756,18 @@
  */
 #define SPDLOG_ROS_FATAL_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, duration, __VA_ARGS__)
 
+// The SPDLOG_ROS_FATAL_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_THROTTLE_NAMED
+ * Log a message with severity FATAL using a named logger with throttling.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, __VA_ARGS__)
+
 // The SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -1331,6 +1781,18 @@
  * It also accepts a single argument of type std::string.
  */
 #define SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(duration, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE(SPDLOG_ROS_LEVEL_FATAL, duration, __VA_ARGS__)
+
+// The SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with severity FATAL using a named logger, skipping the first call and throttling subsequent calls.
+ * \param duration The throttle interval in milliseconds
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ */
+#define SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE_NAMED(duration, name, ...) SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED(SPDLOG_ROS_LEVEL_FATAL, duration, name, __VA_ARGS__)
 
 // The SPDLOG_ROS_FATAL_STREAM macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all

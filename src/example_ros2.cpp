@@ -75,62 +75,80 @@ int mainWithRos(int argc, char** argv)
   RCLCPP_INFO(node->get_logger(), "This info is logged using ROS logging");
   RCLCPP_ERROR(node->get_logger(), "This error is logged using ROS logging");
 
-  SPDLOG_ROS_DEBUG("debug message");
+  SPDLOG_ROS_DEBUG("DEBUG message");
 
-  SPDLOG_ROS_DEBUG_ONCE("debug message once");
-  SPDLOG_ROS_DEBUG_ONCE("debug message once");
+  SPDLOG_ROS_DEBUG_ONCE("DEBUG message once");
+  SPDLOG_ROS_DEBUG_ONCE("DEBUG message once");
 
-  SPDLOG_ROS_DEBUG_EXPRESSION(true, "debug message expression");
-  SPDLOG_ROS_DEBUG_EXPRESSION(false, "debug message expression");
+  SPDLOG_ROS_DEBUG_EXPRESSION(true, "DEBUG message expression");
+  SPDLOG_ROS_DEBUG_EXPRESSION(false, "DEBUG message expression");
 
-  SPDLOG_ROS_DEBUG_FUNCTION([]() -> bool {return true;}, "debug message function");
-  SPDLOG_ROS_DEBUG_FUNCTION([]() -> bool {return false;}, "debug message function");
+  SPDLOG_ROS_DEBUG_FUNCTION([]() -> bool {return true;}, "DEBUG message function");
+  SPDLOG_ROS_DEBUG_FUNCTION([]() -> bool {return false;}, "DEBUG message function");
 
-  SPDLOG_ROS_DEBUG_SKIPFIRST("debug message skip first 1");
-  SPDLOG_ROS_DEBUG_SKIPFIRST("debug message skip first 2");
+  SPDLOG_ROS_DEBUG_SKIPFIRST("DEBUG message skip first 1");
+  SPDLOG_ROS_DEBUG_SKIPFIRST("DEBUG message skip first 2");
 
-  SPDLOG_ROS_DEBUG_THROTTLE(100, "debug message throttle");
+  SPDLOG_ROS_DEBUG_THROTTLE(100, "DEBUG message throttle");
 
-  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(100, "debug message throttle 1");
-  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(100, "debug message throttle 2");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(100, "DEBUG message throttle 1");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE(100, "DEBUG message throttle 2");
 
-  SPDLOG_ROS_DEBUG_STREAM("debug message " << " stream");
+  SPDLOG_ROS_DEBUG_NAMED("fancy_name", "DEBUG message");
 
-  SPDLOG_ROS_DEBUG_STREAM_ONCE("debug message " << " stream once");
-  SPDLOG_ROS_DEBUG_STREAM_ONCE("debug message " << " stream once");
+  SPDLOG_ROS_DEBUG_ONCE_NAMED("fancy_name", "DEBUG message once");
+  SPDLOG_ROS_DEBUG_ONCE_NAMED("fancy_name", "DEBUG message once");
 
-  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION(true, "debug message " << " stream expression");
-  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION(false, "debug message " << " stream expression");
+  SPDLOG_ROS_DEBUG_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_DEBUG_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
 
-  SPDLOG_ROS_DEBUG_STREAM_FUNCTION([]() -> bool {return true;}, "debug message " << " stream function");
-  SPDLOG_ROS_DEBUG_STREAM_FUNCTION([]() -> bool {return false;}, "debug message " << " stream function");
+  SPDLOG_ROS_DEBUG_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_DEBUG_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
 
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST("debug message " << " stream skip first 1");
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST("debug message " << " stream skip first 2");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
 
-  SPDLOG_ROS_DEBUG_STREAM_THROTTLE(100, "debug message " << " stream throttle");
+  SPDLOG_ROS_DEBUG_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
 
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(100, "debug message " << " stream throttle first 1");
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(100, "debug message " << " stream throttle first 2");
+  SPDLOG_ROS_DEBUG_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
 
-  SPDLOG_ROS_DEBUG_STREAM_NAMED("fancy_name", "debug message " << " stream");
+  SPDLOG_ROS_DEBUG_STREAM("DEBUG message " << "stream");
 
-  SPDLOG_ROS_DEBUG_STREAM_ONCE_NAMED("fancy_name", "debug message " << " stream once");
-  SPDLOG_ROS_DEBUG_STREAM_ONCE_NAMED("fancy_name", "debug message " << " stream once");
+  SPDLOG_ROS_DEBUG_STREAM_ONCE("DEBUG message " << "stream once");
+  SPDLOG_ROS_DEBUG_STREAM_ONCE("DEBUG message " << "stream once");
 
-  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION_NAMED(true, "fancy_name", "debug message " << " stream expression");
-  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION_NAMED(false, "fancy_name", "debug message " << " stream expression");
+  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION(true, "DEBUG message " << "stream expression");
+  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION(false, "DEBUG message " << "stream expression");
 
-  SPDLOG_ROS_DEBUG_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "debug message " << " stream function");
-  SPDLOG_ROS_DEBUG_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "debug message " << " stream function");
+  SPDLOG_ROS_DEBUG_STREAM_FUNCTION([]() -> bool {return true;}, "DEBUG message " << "stream function");
+  SPDLOG_ROS_DEBUG_STREAM_FUNCTION([]() -> bool {return false;}, "DEBUG message " << "stream function");
 
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_NAMED("fancy_name", "debug message " << " stream skip first 1");
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_NAMED("fancy_name", "debug message " << " stream skip first 2");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST("DEBUG message " << "stream skip first 1");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST("DEBUG message " << "stream skip first 2");
 
-  SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED(100, "fancy_name", "debug message " << " stream throttle");
+  SPDLOG_ROS_DEBUG_STREAM_THROTTLE(100, "DEBUG message " << "stream throttle");
 
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "debug message " << " stream throttle first 1");
-  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "debug message " << " stream throttle first 2");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(100, "DEBUG message " << "stream throttle first 1");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE(100, "DEBUG message " << "stream throttle first 2");
+
+  SPDLOG_ROS_DEBUG_STREAM_NAMED("fancy_name", "DEBUG message " << "stream");
+
+  SPDLOG_ROS_DEBUG_STREAM_ONCE_NAMED("fancy_name", "DEBUG message " << "stream once");
+  SPDLOG_ROS_DEBUG_STREAM_ONCE_NAMED("fancy_name", "DEBUG message " << "stream once");
+
+  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message " << "stream expression");
+  SPDLOG_ROS_DEBUG_STREAM_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message " << "stream expression");
+
+  SPDLOG_ROS_DEBUG_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message " << "stream function");
+  SPDLOG_ROS_DEBUG_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message " << "stream function");
+
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_NAMED("fancy_name", "DEBUG message " << "stream skip first 1");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_NAMED("fancy_name", "DEBUG message " << "stream skip first 2");
+
+  SPDLOG_ROS_DEBUG_STREAM_THROTTLE_NAMED(100, "fancy_name", "DEBUG message " << "stream throttle");
+
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message " << "stream throttle first 1");
+  SPDLOG_ROS_DEBUG_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message " << "stream throttle first 2");
 
   SPDLOG_ROS_INFO("INFO message");
 
@@ -164,43 +182,61 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(100, "INFO message throttle 1");
   SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(100, "INFO message throttle 2");
 
-  SPDLOG_ROS_INFO_STREAM("INFO message " << " stream");
+  SPDLOG_ROS_INFO_NAMED("fancy_name", "DEBUG message");
 
-  SPDLOG_ROS_INFO_STREAM_ONCE("INFO message " << " stream once");
-  SPDLOG_ROS_INFO_STREAM_ONCE("INFO message " << " stream once");
+  SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "DEBUG message once");
+  SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "DEBUG message once");
 
-  SPDLOG_ROS_INFO_STREAM_EXPRESSION(true, "INFO message " << " stream expression");
-  SPDLOG_ROS_INFO_STREAM_EXPRESSION(false, "INFO message " << " stream expression");
+  SPDLOG_ROS_INFO_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_INFO_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
 
-  SPDLOG_ROS_INFO_STREAM_FUNCTION([]() -> bool {return true;}, "INFO message " << " stream function");
-  SPDLOG_ROS_INFO_STREAM_FUNCTION([]() -> bool {return false;}, "INFO message " << " stream function");
+  SPDLOG_ROS_INFO_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_INFO_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
 
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST("INFO message " << " stream skip first 1");
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST("INFO message " << " stream skip first 2");
+  SPDLOG_ROS_INFO_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_INFO_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
 
-  SPDLOG_ROS_INFO_STREAM_THROTTLE(100, "INFO message " << " stream throttle");
+  SPDLOG_ROS_INFO_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
+  
+  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
 
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(100, "INFO message " << " stream throttle first 1");
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(100, "INFO message " << " stream throttle first 2");
+  SPDLOG_ROS_INFO_STREAM("INFO message " << "stream");
 
-  SPDLOG_ROS_INFO_STREAM_NAMED("fancy_name", "INFO message " << " stream");
+  SPDLOG_ROS_INFO_STREAM_ONCE("INFO message " << "stream once");
+  SPDLOG_ROS_INFO_STREAM_ONCE("INFO message " << "stream once");
 
-  SPDLOG_ROS_INFO_STREAM_ONCE_NAMED("fancy_name", "INFO message " << " stream once");
-  SPDLOG_ROS_INFO_STREAM_ONCE_NAMED("fancy_name", "INFO message " << " stream once");
+  SPDLOG_ROS_INFO_STREAM_EXPRESSION(true, "INFO message " << "stream expression");
+  SPDLOG_ROS_INFO_STREAM_EXPRESSION(false, "INFO message " << "stream expression");
 
-  SPDLOG_ROS_INFO_STREAM_EXPRESSION_NAMED(true, "fancy_name", "INFO message " << " stream expression");
-  SPDLOG_ROS_INFO_STREAM_EXPRESSION_NAMED(false, "fancy_name", "INFO message " << " stream expression");
+  SPDLOG_ROS_INFO_STREAM_FUNCTION([]() -> bool {return true;}, "INFO message " << "stream function");
+  SPDLOG_ROS_INFO_STREAM_FUNCTION([]() -> bool {return false;}, "INFO message " << "stream function");
 
-  SPDLOG_ROS_INFO_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "INFO message " << " stream function");
-  SPDLOG_ROS_INFO_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "INFO message " << " stream function");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST("INFO message " << "stream skip first 1");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST("INFO message " << "stream skip first 2");
 
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_NAMED("fancy_name", "INFO message " << " stream skip first 1");
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_NAMED("fancy_name", "INFO message " << " stream skip first 2");
+  SPDLOG_ROS_INFO_STREAM_THROTTLE(100, "INFO message " << "stream throttle");
 
-  SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED(100, "fancy_name", "INFO message " << " stream throttle");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(100, "INFO message " << "stream throttle first 1");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE(100, "INFO message " << "stream throttle first 2");
 
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "INFO message " << " stream throttle first 1");
-  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "INFO message " << " stream throttle first 2");
+  SPDLOG_ROS_INFO_STREAM_NAMED("fancy_name", "INFO message " << "stream");
+
+  SPDLOG_ROS_INFO_STREAM_ONCE_NAMED("fancy_name", "INFO message " << "stream once");
+  SPDLOG_ROS_INFO_STREAM_ONCE_NAMED("fancy_name", "INFO message " << "stream once");
+
+  SPDLOG_ROS_INFO_STREAM_EXPRESSION_NAMED(true, "fancy_name", "INFO message " << "stream expression");
+  SPDLOG_ROS_INFO_STREAM_EXPRESSION_NAMED(false, "fancy_name", "INFO message " << "stream expression");
+
+  SPDLOG_ROS_INFO_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "INFO message " << "stream function");
+  SPDLOG_ROS_INFO_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "INFO message " << "stream function");
+
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_NAMED("fancy_name", "INFO message " << "stream skip first 1");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_NAMED("fancy_name", "INFO message " << "stream skip first 2");
+
+  SPDLOG_ROS_INFO_STREAM_THROTTLE_NAMED(100, "fancy_name", "INFO message " << "stream throttle");
+
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "INFO message " << "stream throttle first 1");
+  SPDLOG_ROS_INFO_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "INFO message " << "stream throttle first 2");
 
   SPDLOG_ROS_WARN("WARN message");
 
@@ -221,43 +257,61 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(100, "WARN message throttle 1");
   SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE(100, "WARN message throttle 2");
 
-  SPDLOG_ROS_WARN_STREAM("WARN message " << " stream");
+  SPDLOG_ROS_WARN_STREAM("WARN message " << "stream");
 
-  SPDLOG_ROS_WARN_STREAM_ONCE("WARN message " << " stream once");
-  SPDLOG_ROS_WARN_STREAM_ONCE("WARN message " << " stream once");
+  SPDLOG_ROS_WARN_STREAM_ONCE("WARN message " << "stream once");
+  SPDLOG_ROS_WARN_STREAM_ONCE("WARN message " << "stream once");
 
-  SPDLOG_ROS_WARN_STREAM_EXPRESSION(true, "WARN message " << " stream expression");
-  SPDLOG_ROS_WARN_STREAM_EXPRESSION(false, "WARN message " << " stream expression");
+  SPDLOG_ROS_WARN_STREAM_EXPRESSION(true, "WARN message " << "stream expression");
+  SPDLOG_ROS_WARN_STREAM_EXPRESSION(false, "WARN message " << "stream expression");
 
-  SPDLOG_ROS_WARN_STREAM_FUNCTION([]() -> bool {return true;}, "WARN message " << " stream function");
-  SPDLOG_ROS_WARN_STREAM_FUNCTION([]() -> bool {return false;}, "WARN message " << " stream function");
+  SPDLOG_ROS_WARN_STREAM_FUNCTION([]() -> bool {return true;}, "WARN message " << "stream function");
+  SPDLOG_ROS_WARN_STREAM_FUNCTION([]() -> bool {return false;}, "WARN message " << "stream function");
 
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST("WARN message " << " stream skip first 1");
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST("WARN message " << " stream skip first 2");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST("WARN message " << "stream skip first 1");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST("WARN message " << "stream skip first 2");
 
-  SPDLOG_ROS_WARN_STREAM_THROTTLE(100, "WARN message " << " stream throttle");
+  SPDLOG_ROS_WARN_STREAM_THROTTLE(100, "WARN message " << "stream throttle");
 
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << " stream throttle first 1");
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << " stream throttle first 2");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << "stream throttle first 1");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << "stream throttle first 2");
 
-  SPDLOG_ROS_WARN_STREAM_NAMED("fancy_name", "WARN message " << " stream");
+  SPDLOG_ROS_WARN_NAMED("fancy_name", "DEBUG message");
 
-  SPDLOG_ROS_WARN_STREAM_ONCE_NAMED("fancy_name", "WARN message " << " stream once");
-  SPDLOG_ROS_WARN_STREAM_ONCE_NAMED("fancy_name", "WARN message " << " stream once");
+  SPDLOG_ROS_WARN_ONCE_NAMED("fancy_name", "DEBUG message once");
+  SPDLOG_ROS_WARN_ONCE_NAMED("fancy_name", "DEBUG message once");
 
-  SPDLOG_ROS_WARN_STREAM_EXPRESSION_NAMED(true, "fancy_name", "WARN message " << " stream expression");
-  SPDLOG_ROS_WARN_STREAM_EXPRESSION_NAMED(false, "fancy_name", "WARN message " << " stream expression");
+  SPDLOG_ROS_WARN_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_WARN_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
 
-  SPDLOG_ROS_WARN_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "WARN message " << " stream function");
-  SPDLOG_ROS_WARN_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "WARN message " << " stream function");
+  SPDLOG_ROS_WARN_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_WARN_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
 
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_NAMED("fancy_name", "WARN message " << " stream skip first 1");
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_NAMED("fancy_name", "WARN message " << " stream skip first 2");
+  SPDLOG_ROS_WARN_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_WARN_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
 
-  SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED(100, "fancy_name", "WARN message " << " stream throttle");
+  SPDLOG_ROS_WARN_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
+  
+  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
 
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "WARN message " << " stream throttle first 1");
-  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "WARN message " << " stream throttle first 2");
+  SPDLOG_ROS_WARN_STREAM_NAMED("fancy_name", "WARN message " << "stream");
+
+  SPDLOG_ROS_WARN_STREAM_ONCE_NAMED("fancy_name", "WARN message " << "stream once");
+  SPDLOG_ROS_WARN_STREAM_ONCE_NAMED("fancy_name", "WARN message " << "stream once");
+
+  SPDLOG_ROS_WARN_STREAM_EXPRESSION_NAMED(true, "fancy_name", "WARN message " << "stream expression");
+  SPDLOG_ROS_WARN_STREAM_EXPRESSION_NAMED(false, "fancy_name", "WARN message " << "stream expression");
+
+  SPDLOG_ROS_WARN_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "WARN message " << "stream function");
+  SPDLOG_ROS_WARN_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "WARN message " << "stream function");
+
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_NAMED("fancy_name", "WARN message " << "stream skip first 1");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_NAMED("fancy_name", "WARN message " << "stream skip first 2");
+
+  SPDLOG_ROS_WARN_STREAM_THROTTLE_NAMED(100, "fancy_name", "WARN message " << "stream throttle");
+
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "WARN message " << "stream throttle first 1");
+  SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "WARN message " << "stream throttle first 2");
 
   SPDLOG_ROS_ERROR("ERROR message");
 
@@ -278,43 +332,61 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(100, "ERROR message throttle 1");
   SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(100, "ERROR message throttle 2");
 
-  SPDLOG_ROS_ERROR_STREAM("ERROR message " << " stream");
+  SPDLOG_ROS_ERROR_NAMED("fancy_name", "DEBUG message");
 
-  SPDLOG_ROS_ERROR_STREAM_ONCE("ERROR message " << " stream once");
-  SPDLOG_ROS_ERROR_STREAM_ONCE("ERROR message " << " stream once");
+  SPDLOG_ROS_ERROR_ONCE_NAMED("fancy_name", "DEBUG message once");
+  SPDLOG_ROS_ERROR_ONCE_NAMED("fancy_name", "DEBUG message once");
 
-  SPDLOG_ROS_ERROR_STREAM_EXPRESSION(true, "ERROR message " << " stream expression");
-  SPDLOG_ROS_ERROR_STREAM_EXPRESSION(false, "ERROR message " << " stream expression");
+  SPDLOG_ROS_ERROR_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_ERROR_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
 
-  SPDLOG_ROS_ERROR_STREAM_FUNCTION([]() -> bool {return true;}, "ERROR message " << " stream function");
-  SPDLOG_ROS_ERROR_STREAM_FUNCTION([]() -> bool {return false;}, "ERROR message " << " stream function");
+  SPDLOG_ROS_ERROR_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_ERROR_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
 
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST("ERROR message " << " stream skip first 1");
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST("ERROR message " << " stream skip first 2");
+  SPDLOG_ROS_ERROR_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_ERROR_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
 
-  SPDLOG_ROS_ERROR_STREAM_THROTTLE(100, "ERROR message " << " stream throttle");
+  SPDLOG_ROS_ERROR_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
+  
+  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
 
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(100, "ERROR message " << " stream throttle first 1");
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(100, "ERROR message " << " stream throttle first 2");
+  SPDLOG_ROS_ERROR_STREAM("ERROR message " << "stream");
 
-  SPDLOG_ROS_ERROR_STREAM_NAMED("fancy_name", "ERROR message " << " stream");
+  SPDLOG_ROS_ERROR_STREAM_ONCE("ERROR message " << "stream once");
+  SPDLOG_ROS_ERROR_STREAM_ONCE("ERROR message " << "stream once");
 
-  SPDLOG_ROS_ERROR_STREAM_ONCE_NAMED("fancy_name", "ERROR message " << " stream once");
-  SPDLOG_ROS_ERROR_STREAM_ONCE_NAMED("fancy_name", "ERROR message " << " stream once");
+  SPDLOG_ROS_ERROR_STREAM_EXPRESSION(true, "ERROR message " << "stream expression");
+  SPDLOG_ROS_ERROR_STREAM_EXPRESSION(false, "ERROR message " << "stream expression");
 
-  SPDLOG_ROS_ERROR_STREAM_EXPRESSION_NAMED(true, "fancy_name", "ERROR message " << " stream expression");
-  SPDLOG_ROS_ERROR_STREAM_EXPRESSION_NAMED(false, "fancy_name", "ERROR message " << " stream expression");
+  SPDLOG_ROS_ERROR_STREAM_FUNCTION([]() -> bool {return true;}, "ERROR message " << "stream function");
+  SPDLOG_ROS_ERROR_STREAM_FUNCTION([]() -> bool {return false;}, "ERROR message " << "stream function");
 
-  SPDLOG_ROS_ERROR_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "ERROR message " << " stream function");
-  SPDLOG_ROS_ERROR_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "ERROR message " << " stream function");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST("ERROR message " << "stream skip first 1");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST("ERROR message " << "stream skip first 2");
 
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_NAMED("fancy_name", "ERROR message " << " stream skip first 1");
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_NAMED("fancy_name", "ERROR message " << " stream skip first 2");
+  SPDLOG_ROS_ERROR_STREAM_THROTTLE(100, "ERROR message " << "stream throttle");
 
-  SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED(100, "fancy_name", "ERROR message " << " stream throttle");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(100, "ERROR message " << "stream throttle first 1");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE(100, "ERROR message " << "stream throttle first 2");
 
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "ERROR message " << " stream throttle first 1");
-  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "ERROR message " << " stream throttle first 2");
+  SPDLOG_ROS_ERROR_STREAM_NAMED("fancy_name", "ERROR message " << "stream");
+
+  SPDLOG_ROS_ERROR_STREAM_ONCE_NAMED("fancy_name", "ERROR message " << "stream once");
+  SPDLOG_ROS_ERROR_STREAM_ONCE_NAMED("fancy_name", "ERROR message " << "stream once");
+
+  SPDLOG_ROS_ERROR_STREAM_EXPRESSION_NAMED(true, "fancy_name", "ERROR message " << "stream expression");
+  SPDLOG_ROS_ERROR_STREAM_EXPRESSION_NAMED(false, "fancy_name", "ERROR message " << "stream expression");
+
+  SPDLOG_ROS_ERROR_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "ERROR message " << "stream function");
+  SPDLOG_ROS_ERROR_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "ERROR message " << "stream function");
+
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_NAMED("fancy_name", "ERROR message " << "stream skip first 1");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_NAMED("fancy_name", "ERROR message " << "stream skip first 2");
+
+  SPDLOG_ROS_ERROR_STREAM_THROTTLE_NAMED(100, "fancy_name", "ERROR message " << "stream throttle");
+
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "ERROR message " << "stream throttle first 1");
+  SPDLOG_ROS_ERROR_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "ERROR message " << "stream throttle first 2");
 
   SPDLOG_ROS_FATAL("FATAL message");
 
@@ -335,43 +407,43 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(100, "FATAL message throttle 1");
   SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE(100, "FATAL message throttle 2");
 
-  SPDLOG_ROS_FATAL_STREAM("FATAL message " << " stream");
+  SPDLOG_ROS_FATAL_STREAM("FATAL message " << "stream");
 
-  SPDLOG_ROS_FATAL_STREAM_ONCE("FATAL message " << " stream once");
-  SPDLOG_ROS_FATAL_STREAM_ONCE("FATAL message " << " stream once");
+  SPDLOG_ROS_FATAL_STREAM_ONCE("FATAL message " << "stream once");
+  SPDLOG_ROS_FATAL_STREAM_ONCE("FATAL message " << "stream once");
 
-  SPDLOG_ROS_FATAL_STREAM_EXPRESSION(true, "FATAL message " << " stream expression");
-  SPDLOG_ROS_FATAL_STREAM_EXPRESSION(false, "FATAL message " << " stream expression");
+  SPDLOG_ROS_FATAL_STREAM_EXPRESSION(true, "FATAL message " << "stream expression");
+  SPDLOG_ROS_FATAL_STREAM_EXPRESSION(false, "FATAL message " << "stream expression");
 
-  SPDLOG_ROS_FATAL_STREAM_FUNCTION([]() -> bool {return true;}, "FATAL message " << " stream function");
-  SPDLOG_ROS_FATAL_STREAM_FUNCTION([]() -> bool {return false;}, "FATAL message " << " stream function");
+  SPDLOG_ROS_FATAL_STREAM_FUNCTION([]() -> bool {return true;}, "FATAL message " << "stream function");
+  SPDLOG_ROS_FATAL_STREAM_FUNCTION([]() -> bool {return false;}, "FATAL message " << "stream function");
 
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST("FATAL message " << " stream skip first 1");
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST("FATAL message " << " stream skip first 2");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST("FATAL message " << "stream skip first 1");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST("FATAL message " << "stream skip first 2");
 
-  SPDLOG_ROS_FATAL_STREAM_THROTTLE(100, "FATAL message " << " stream throttle");
+  SPDLOG_ROS_FATAL_STREAM_THROTTLE(100, "FATAL message " << "stream throttle");
 
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(100, "FATAL message " << " stream throttle first 1");
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(100, "FATAL message " << " stream throttle first 2");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(100, "FATAL message " << "stream throttle first 1");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE(100, "FATAL message " << "stream throttle first 2");
 
-  SPDLOG_ROS_FATAL_STREAM_NAMED("fancy_name", "FATAL message " << " stream");
+  SPDLOG_ROS_FATAL_STREAM_NAMED("fancy_name", "FATAL message " << "stream");
 
-  SPDLOG_ROS_FATAL_STREAM_ONCE_NAMED("fancy_name", "FATAL message " << " stream once");
-  SPDLOG_ROS_FATAL_STREAM_ONCE_NAMED("fancy_name", "FATAL message " << " stream once");
+  SPDLOG_ROS_FATAL_STREAM_ONCE_NAMED("fancy_name", "FATAL message " << "stream once");
+  SPDLOG_ROS_FATAL_STREAM_ONCE_NAMED("fancy_name", "FATAL message " << "stream once");
 
-  SPDLOG_ROS_FATAL_STREAM_EXPRESSION_NAMED(true, "fancy_name", "FATAL message " << " stream expression");
-  SPDLOG_ROS_FATAL_STREAM_EXPRESSION_NAMED(false, "fancy_name", "FATAL message " << " stream expression");
+  SPDLOG_ROS_FATAL_STREAM_EXPRESSION_NAMED(true, "fancy_name", "FATAL message " << "stream expression");
+  SPDLOG_ROS_FATAL_STREAM_EXPRESSION_NAMED(false, "fancy_name", "FATAL message " << "stream expression");
 
-  SPDLOG_ROS_FATAL_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "FATAL message " << " stream function");
-  SPDLOG_ROS_FATAL_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "FATAL message " << " stream function");
+  SPDLOG_ROS_FATAL_STREAM_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "FATAL message " << "stream function");
+  SPDLOG_ROS_FATAL_STREAM_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "FATAL message " << "stream function");
 
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_NAMED("fancy_name", "FATAL message " << " stream skip first 1");
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_NAMED("fancy_name", "FATAL message " << " stream skip first 2");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_NAMED("fancy_name", "FATAL message " << "stream skip first 1");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_NAMED("fancy_name", "FATAL message " << "stream skip first 2");
 
-  SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED(100, "fancy_name", "FATAL message " << " stream throttle");
+  SPDLOG_ROS_FATAL_STREAM_THROTTLE_NAMED(100, "fancy_name", "FATAL message " << "stream throttle");
 
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message " << " stream throttle first 1");
-  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message " << " stream throttle first 2");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message " << "stream throttle first 1");
+  SPDLOG_ROS_FATAL_STREAM_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message " << "stream throttle first 2");
 
   // make an infinite loop to test throttling
   while (rclcpp::ok())
