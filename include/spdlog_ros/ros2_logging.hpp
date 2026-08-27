@@ -30,7 +30,7 @@ public:
     rclcpp::node_interfaces::NodeParametersInterface::SharedPtr parameters_interface);
   
   template <typename NodeT>
-  ROSLoggingManager(NodeT node)
+  ROSLoggingManager(NodeT& node)
     : ROSLoggingManager(node.get_node_base_interface(),
                         node.get_node_clock_interface(),
                         node.get_node_topics_interface(),
