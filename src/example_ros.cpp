@@ -182,11 +182,10 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(100, "INFO message throttle 1");
   SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE(100, "INFO message throttle 2");
 
-  SPDLOG_ROS_INFO_NAMED("fancy_name", "DEBUG message");
+  SPDLOG_ROS_INFO_NAMED("fancy_name", "INFO message");
 
-  SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "DEBUG message once");
-  SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "DEBUG message once");
-
+  SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "INFO message once");
+  SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "INFO message once");
   SPDLOG_ROS_INFO_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
   SPDLOG_ROS_INFO_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
 
