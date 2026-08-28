@@ -186,18 +186,18 @@ int mainWithRos(int argc, char** argv)
 
   SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "INFO message once");
   SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "INFO message once");
-  SPDLOG_ROS_INFO_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
-  SPDLOG_ROS_INFO_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_INFO_EXPRESSION_NAMED(true, "fancy_name", "INFO message expression");
+  SPDLOG_ROS_INFO_EXPRESSION_NAMED(false, "fancy_name", "INFO message expression");
 
-  SPDLOG_ROS_INFO_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
-  SPDLOG_ROS_INFO_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_INFO_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "INFO message function");
+  SPDLOG_ROS_INFO_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "INFO message function");
 
-  SPDLOG_ROS_INFO_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
-  SPDLOG_ROS_INFO_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_INFO_SKIPFIRST_NAMED("fancy_name", "INFO message skip first");
+  SPDLOG_ROS_INFO_SKIPFIRST_NAMED("fancy_name", "INFO message skip first");
 
-  SPDLOG_ROS_INFO_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
+  SPDLOG_ROS_INFO_THROTTLE_NAMED(100, "fancy_name", "INFO message throttle");
   
-  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
+  SPDLOG_ROS_INFO_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "INFO message throttle first");
 
   SPDLOG_ROS_INFO_STREAM("INFO message " << "stream");
 
@@ -275,23 +275,23 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << "stream throttle first 1");
   SPDLOG_ROS_WARN_STREAM_SKIPFIRST_THROTTLE(100, "WARN message " << "stream throttle first 2");
 
-  SPDLOG_ROS_WARN_NAMED("fancy_name", "DEBUG message");
+  SPDLOG_ROS_WARN_NAMED("fancy_name", "WARN message");
 
-  SPDLOG_ROS_WARN_ONCE_NAMED("fancy_name", "DEBUG message once");
-  SPDLOG_ROS_WARN_ONCE_NAMED("fancy_name", "DEBUG message once");
+  SPDLOG_ROS_WARN_ONCE_NAMED("fancy_name", "WARN message once");
+  SPDLOG_ROS_WARN_ONCE_NAMED("fancy_name", "WARN message once");
 
-  SPDLOG_ROS_WARN_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
-  SPDLOG_ROS_WARN_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_WARN_EXPRESSION_NAMED(true, "fancy_name", "WARN message expression");
+  SPDLOG_ROS_WARN_EXPRESSION_NAMED(false, "fancy_name", "WARN message expression");
 
-  SPDLOG_ROS_WARN_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
-  SPDLOG_ROS_WARN_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_WARN_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "WARN message function");
+  SPDLOG_ROS_WARN_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "WARN message function");
 
-  SPDLOG_ROS_WARN_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
-  SPDLOG_ROS_WARN_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_WARN_SKIPFIRST_NAMED("fancy_name", "WARN message skip first");
+  SPDLOG_ROS_WARN_SKIPFIRST_NAMED("fancy_name", "WARN message skip first");
 
-  SPDLOG_ROS_WARN_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
+  SPDLOG_ROS_WARN_THROTTLE_NAMED(100, "fancy_name", "WARN message throttle");
   
-  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
+  SPDLOG_ROS_WARN_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "WARN message throttle first");
 
   SPDLOG_ROS_WARN_STREAM_NAMED("fancy_name", "WARN message " << "stream");
 
@@ -331,23 +331,23 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(100, "ERROR message throttle 1");
   SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE(100, "ERROR message throttle 2");
 
-  SPDLOG_ROS_ERROR_NAMED("fancy_name", "DEBUG message");
+  SPDLOG_ROS_ERROR_NAMED("fancy_name", "ERROR message");
 
-  SPDLOG_ROS_ERROR_ONCE_NAMED("fancy_name", "DEBUG message once");
-  SPDLOG_ROS_ERROR_ONCE_NAMED("fancy_name", "DEBUG message once");
+  SPDLOG_ROS_ERROR_ONCE_NAMED("fancy_name", "ERROR message once");
+  SPDLOG_ROS_ERROR_ONCE_NAMED("fancy_name", "ERROR message once");
 
-  SPDLOG_ROS_ERROR_EXPRESSION_NAMED(true, "fancy_name", "DEBUG message expression");
-  SPDLOG_ROS_ERROR_EXPRESSION_NAMED(false, "fancy_name", "DEBUG message expression");
+  SPDLOG_ROS_ERROR_EXPRESSION_NAMED(true, "fancy_name", "ERROR message expression");
+  SPDLOG_ROS_ERROR_EXPRESSION_NAMED(false, "fancy_name", "ERROR message expression");
 
-  SPDLOG_ROS_ERROR_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "DEBUG message function");
-  SPDLOG_ROS_ERROR_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "DEBUG message function");
+  SPDLOG_ROS_ERROR_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "ERROR message function");
+  SPDLOG_ROS_ERROR_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "ERROR message function");
 
-  SPDLOG_ROS_ERROR_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
-  SPDLOG_ROS_ERROR_SKIPFIRST_NAMED("fancy_name", "DEBUG message skip first");
+  SPDLOG_ROS_ERROR_SKIPFIRST_NAMED("fancy_name", "ERROR message skip first");
+  SPDLOG_ROS_ERROR_SKIPFIRST_NAMED("fancy_name", "ERROR message skip first");
 
-  SPDLOG_ROS_ERROR_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle");
+  SPDLOG_ROS_ERROR_THROTTLE_NAMED(100, "fancy_name", "ERROR message throttle");
   
-  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "DEBUG message throttle first");
+  SPDLOG_ROS_ERROR_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "ERROR message throttle first");
 
   SPDLOG_ROS_ERROR_STREAM("ERROR message " << "stream");
 
