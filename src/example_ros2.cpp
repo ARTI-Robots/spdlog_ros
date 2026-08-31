@@ -186,6 +186,7 @@ int mainWithRos(int argc, char** argv)
 
   SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "INFO message once");
   SPDLOG_ROS_INFO_ONCE_NAMED("fancy_name", "INFO message once");
+
   SPDLOG_ROS_INFO_EXPRESSION_NAMED(true, "fancy_name", "INFO message expression");
   SPDLOG_ROS_INFO_EXPRESSION_NAMED(false, "fancy_name", "INFO message expression");
 
