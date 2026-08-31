@@ -418,12 +418,13 @@ int mainWithRos(int argc, char** argv)
   SPDLOG_ROS_FATAL_FUNCTION_NAMED([]() -> bool {return true;}, "fancy_name", "FATAL message function");
   SPDLOG_ROS_FATAL_FUNCTION_NAMED([]() -> bool {return false;}, "fancy_name", "FATAL message function");
 
-  SPDLOG_ROS_FATAL_SKIPFIRST_NAMED("fancy_name", "FATAL message skip first");
-  SPDLOG_ROS_FATAL_SKIPFIRST_NAMED("fancy_name", "FATAL message skip first");
+  SPDLOG_ROS_FATAL_SKIPFIRST_NAMED("fancy_name", "FATAL message skip first 1");
+  SPDLOG_ROS_FATAL_SKIPFIRST_NAMED("fancy_name", "FATAL message skip first 2");
 
   SPDLOG_ROS_FATAL_THROTTLE_NAMED(100, "fancy_name", "FATAL message throttle");
 
-  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message throttle first");
+  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message throttle 1");
+  SPDLOG_ROS_FATAL_SKIPFIRST_THROTTLE_NAMED(100, "fancy_name", "FATAL message throttle 2");
 
   SPDLOG_ROS_FATAL_STREAM("FATAL message " << "stream");
 
