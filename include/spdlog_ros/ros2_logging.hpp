@@ -31,6 +31,14 @@ public:
   
   template <typename NodeT>
   ROSLoggingManager(NodeT& node)
+  // Note(fhirmann): Pass-by-reference is required since NodeT (at least in case of rclcpp::Node and
+  // rclcpp_lifecycle::LifecycleNode) does not have a copy-constructor. The unusual non-const reference is required
+  // because the getters for the node interfaces are not const and therefore cannot be accessed from a const reference.
+  // The getters are also correctly to be non-const although they just return shared pointers to the interfaces (which
+  // technically could be const), because using the returned shared pointers, the user can modify the underlying
+  // interfaces and therefore the node itself. In the future rclcpp could provide a const variant that is returning a
+  // shared pointer to const but in this case this would not help since the ROSLoggingManager requires creating
+  // publishers and services and this is in any case non-const.
     : ROSLoggingManager(node.get_node_base_interface(),
                         node.get_node_clock_interface(),
                         node.get_node_topics_interface(),
