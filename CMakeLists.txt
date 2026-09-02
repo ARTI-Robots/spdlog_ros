@@ -123,7 +123,10 @@ else()
     CATKIN_DEPENDS roscpp
     DEPENDS )
 
-  include_directories(${catkin_INCLUDE_DIRS})
+  include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+  )
 
   add_library(${PROJECT_NAME} src/ros_sink.cpp src/logger_manager.cpp src/ros_logging.cpp)
   

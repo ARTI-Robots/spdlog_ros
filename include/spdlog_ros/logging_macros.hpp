@@ -247,6 +247,29 @@
     } \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_NAMED
+ * Log a message with defined severity.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_NAMED(severity, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
+        severity, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_ONCE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -265,6 +288,30 @@
     { \
       SPDLOG_ROS_UTILS_LOG_ONCE(     \
         SPDLOG_ROS_DEFAULT_NAME, \
+        severity, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_ONCE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_ONCE_NAMED
+ * Log a message with defined severity with the following conditions:
+ * All subsequent log calls except the first one are being ignored.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_ONCE_NAMED(severity, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG_ONCE( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         __VA_ARGS__); \
     } \
@@ -289,6 +336,32 @@
     { \
       SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
         SPDLOG_ROS_DEFAULT_NAME, \
+        severity, \
+        expression, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_EXPRESSION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_EXPRESSION_NAMED
+ * Log a message with defined severity with the following conditions:
+ * Log calls are being ignored when the expression evaluates to false.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param expression The expression determining if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_EXPRESSION_NAMED(severity, expression, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG_EXPRESSION( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         expression, \
         __VA_ARGS__); \
@@ -320,6 +393,32 @@
     } \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_FUNCTION_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_FUNCTION_NAMED
+ * Log a message with defined severity with the following conditions:
+ * Log calls are being ignored when the function returns false.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param function The functions return value determines if the message should be logged
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_FUNCTION_NAMED(severity, function, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG_FUNCTION( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
+        severity, \
+        function, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_SKIPFIRST macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -338,6 +437,30 @@
     { \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
         SPDLOG_ROS_DEFAULT_NAME, \
+        severity, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED
+ * Log a message with defined severity with the following conditions:
+ * The first log call is being ignored but all subsequent calls are being processed.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_SKIPFIRST_NAMED(severity, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG_SKIPFIRST( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         __VA_ARGS__); \
     } \
@@ -369,6 +492,33 @@
     } \
   } while (0)
 
+// The SPDLOG_ROS_GENERAL_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_THROTTLE_NAMED
+ * Log a message with defined severity with the following conditions:
+ * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_THROTTLE_NAMED(severity, duration, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG_THROTTLE( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
+        severity, \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
+        duration, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
 // The SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE macro is surrounded by do { .. } while (0)
 // to implement the standard C macro idiom to make the macro safe in all
 // contexts; see http://c-faq.com/cpp/multistmt.html for more information.
@@ -389,6 +539,34 @@
     { \
       SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
         SPDLOG_ROS_DEFAULT_NAME, \
+        severity, \
+        spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
+        duration, \
+        __VA_ARGS__); \
+    } \
+  } while (0)
+
+// The SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED macro is surrounded by do { .. } while (0)
+// to implement the standard C macro idiom to make the macro safe in all
+// contexts; see http://c-faq.com/cpp/multistmt.html for more information.
+/**
+ * \def SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED
+ * Log a message with defined severity with the following conditions:
+ * The first log call is being ignored but all subsequent calls are being processed.
+ * Log calls are being ignored if the last logged message is not longer ago than the specified duration.
+ * \param severity The severity of the logging as spdlog::level::level_enum
+ * \param duration The duration of the throttle interval as an integral value in milliseconds.
+ * \param name name of the logger prepended to the message
+ * \param ... The format string, followed by the variable arguments for the format string.
+ * It also accepts a single argument of type std::string.
+ */
+#define SPDLOG_ROS_GENERAL_SKIPFIRST_THROTTLE_NAMED(severity, duration, name, ...) \
+  do { \
+    SPDLOG_ROS_LOGGING_ENABLED(SPDLOG_ROS_NAMED_LOGGER_NAME(name), severity) \
+    if (SPDLOG_ROS_UTILS_UNLIKELY(__spdlog_ros_logging_enabled_log_location.enabled)) \
+    { \
+      SPDLOG_ROS_UTILS_LOG_SKIPFIRST_THROTTLE( \
+        SPDLOG_ROS_NAMED_LOGGER_NAME(name), \
         severity, \
         spdlog_ros::LoggerManager::GetLoggerManager()->getTimePointCallback(), \
         duration, \
