@@ -85,6 +85,10 @@ private:
   LoggerManager(const std::string& base_logger_name);
 
   std::string getFullLoggerName(const std::string& name);
+  std::string getLoggerNameFromFullName(const std::string& full_logger_name);
+  static std::vector<std::string> splitLoggerName(const std::string& name,
+                                                  std::string delimiter = SPDLOG_ROS_LOGGER_DELIMITER);
+  static std::string getParentLoggerName(const std::string& name);
 
   void createDefaultSinks();
 
