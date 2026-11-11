@@ -112,6 +112,12 @@ if ( ament_cmake_ros_FOUND )
     if(TARGET ${PROJECT_NAME}_test)
       target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME}_lib)
     endif()
+
+    ament_add_gtest(${PROJECT_NAME}_env_levels_test test/test_spdlog_env_levels.cpp)
+    if(TARGET ${PROJECT_NAME}_env_levels_test)
+      target_link_libraries(${PROJECT_NAME}_env_levels_test ${PROJECT_NAME}_lib)
+      ament_target_dependencies(${PROJECT_NAME}_env_levels_test rclcpp)
+    endif()
   endif()
 
   # ament_export_include_directories(include)
@@ -172,6 +178,18 @@ else()
     catkin_add_gtest(${PROJECT_NAME}_test test/test_logger_manager.cpp)
     if(TARGET ${PROJECT_NAME}_test)
       target_link_libraries(${PROJECT_NAME}_test
+        ${PROJECT_NAME}
+        ${catkin_LIBRARIES}
+      )
+    endif()
+
+    find_package(rostest REQUIRED)
+    add_rostest_gtest(${PROJECT_NAME}_env_levels_test
+      test/spdlog_env_levels.test
+      test/test_spdlog_env_levels.cpp
+    )
+    if(TARGET ${PROJECT_NAME}_env_levels_test)
+      target_link_libraries(${PROJECT_NAME}_env_levels_test
         ${PROJECT_NAME}
         ${catkin_LIBRARIES}
       )
