@@ -65,6 +65,12 @@ public:
   std::shared_ptr<spdlog::logger> getLogger(const std::string& name,
                                             bool create_if_not_existing = true,
                                             bool add_default_sinks = true);
+
+  std::string getFullLoggerName(const std::string& name);
+  std::string getLoggerNameFromFullName(const std::string& full_logger_name);
+  static std::vector<std::string> splitLoggerName(const std::string& name,
+                                                  std::string delimiter = SPDLOG_ROS_LOGGER_DELIMITER);
+  static std::string getParentLoggerName(const std::string& name);
   
   void shutdownLogging();
 
@@ -83,12 +89,6 @@ public:
 
 private:
   LoggerManager(const std::string& base_logger_name);
-
-  std::string getFullLoggerName(const std::string& name);
-  std::string getLoggerNameFromFullName(const std::string& full_logger_name);
-  static std::vector<std::string> splitLoggerName(const std::string& name,
-                                                  std::string delimiter = SPDLOG_ROS_LOGGER_DELIMITER);
-  static std::string getParentLoggerName(const std::string& name);
 
   void createDefaultSinks();
 

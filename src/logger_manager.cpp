@@ -70,22 +70,27 @@ std::string LoggerManager::getFullLoggerName(const std::string& name)
 
 std::string LoggerManager::getLoggerNameFromFullName(const std::string& full_logger_name)
 {
-  // remove the base logger name part from the full logger name
-  if (full_logger_name.find(base_logger_name_) == 0)
+  if (full_logger_name == base_logger_name_)
   {
-    std::string remaining = full_logger_name.substr(base_logger_name_.size());
-    // Remove the leading delimiter if present
-    if (!remaining.empty() && remaining.find(SPDLOG_ROS_LOGGER_DELIMITER) == 0)
-    {
-      remaining.erase(0, std::string(SPDLOG_ROS_LOGGER_DELIMITER).length());
-    }
-    return remaining;
+    return "";
   }
+
+  const std::string base_logger_prefix = base_logger_name_ + SPDLOG_ROS_LOGGER_DELIMITER;
+  if (full_logger_name.find(base_logger_prefix) == 0)
+  {
+    return full_logger_name.substr(base_logger_prefix.size());
+  }
+
   return full_logger_name;
 }
 
 std::vector<std::string> LoggerManager::splitLoggerName(const std::string& name, std::string delimiter)
 {
+  if (delimiter.empty())
+  {
+    throw std::invalid_argument("Logger name delimiter must not be empty");
+  }
+
   std::vector<std::string> parts;
   size_t start = 0;
   size_t end = name.find(delimiter);
