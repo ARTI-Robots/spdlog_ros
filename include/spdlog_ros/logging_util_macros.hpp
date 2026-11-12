@@ -81,11 +81,14 @@ typedef uint64_t spdlog_ros_utils_ret_t;
 
 #define SPDLOG_ROS_NAME_PREFIX SPDLOG_ROS_PACKAGE_NAME
 #define SPDLOG_ROS_DEFAULT_NAME SPDLOG_ROS_NAME_PREFIX
+
+#define SPDLOG_ROS_LOGGER_DELIMITER "."
+
 /**
  * \def SPDLOG_ROS_NAMED_LOGGER_NAME
  * Need to convert SPDLOG_ROS_NAME_PREFIX together with the dot to a std::string such that the named logger name can be
  * a regular c-string as well as std::string
  */
-#define SPDLOG_ROS_NAMED_LOGGER_NAME(name) std::string(SPDLOG_ROS_NAME_PREFIX ".") + name
+#define SPDLOG_ROS_NAMED_LOGGER_NAME(name) std::string(SPDLOG_ROS_NAME_PREFIX SPDLOG_ROS_LOGGER_DELIMITER) + name
 
 #endif //SPDLOG_ROS_LOGGING_UTIL_MACROS_HPP

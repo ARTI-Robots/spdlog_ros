@@ -57,7 +57,7 @@ std::string LoggerManager::getFullLoggerName(const std::string& name)
 
   if (!base_logger_name_.empty() && !name.empty())
   {
-    full_logger_name += ".";
+    full_logger_name += SPDLOG_ROS_LOGGER_DELIMITER;
   }
 
   if (!name.empty())
@@ -66,6 +66,57 @@ std::string LoggerManager::getFullLoggerName(const std::string& name)
   }
 
   return full_logger_name;
+}
+
+std::string LoggerManager::getLoggerNameFromFullName(const std::string& full_logger_name)
+{
+  if (full_logger_name == base_logger_name_)
+  {
+    return "";
+  }
+
+  const std::string base_logger_prefix = base_logger_name_ + SPDLOG_ROS_LOGGER_DELIMITER;
+  if (full_logger_name.find(base_logger_prefix) == 0)
+  {
+    return full_logger_name.substr(base_logger_prefix.size());
+  }
+
+  return full_logger_name;
+}
+
+std::vector<std::string> LoggerManager::splitLoggerName(const std::string& name, std::string delimiter)
+{
+  if (delimiter.empty())
+  {
+    throw std::invalid_argument("Logger name delimiter must not be empty");
+  }
+
+  std::vector<std::string> parts;
+  size_t start = 0;
+  size_t end = name.find(delimiter);
+  while (end != std::string::npos)
+  {
+    parts.push_back(name.substr(start, end - start));
+    start = end + delimiter.length();
+    end = name.find(delimiter, start);
+  }
+  parts.push_back(name.substr(start));
+  return parts;
+}
+
+std::string LoggerManager::getParentLoggerName(const std::string& name)
+{
+  auto parts = splitLoggerName(name);
+  if (parts.size() <= 1)
+  {
+    return "";
+  }
+  std::string parent = parts[0];
+  for (size_t i = 1; i < parts.size() - 1; ++i)
+  {
+    parent += SPDLOG_ROS_LOGGER_DELIMITER + parts[i];
+  }
+  return parent;
 }
 
 void LoggerManager::createDefaultSinks()
@@ -187,7 +238,7 @@ std::shared_ptr<spdlog::logger> LoggerManager::getLoggerNoLock(
   std::shared_ptr<spdlog::logger> logger = nullptr;
 
   const std::string full_logger_name = getFullLoggerName(name);
-  
+
   const auto logger_search_it = logger_map_.find(full_logger_name);
   if (logger_search_it != logger_map_.end())
   {
@@ -195,9 +246,37 @@ std::shared_ptr<spdlog::logger> LoggerManager::getLoggerNoLock(
   }
   else if (create_if_not_existing)
   {
-    logger = createAsyncLogger(name, {}, add_default_sinks);
-    spdlog::initialize_logger(logger);
-    logger_map_[full_logger_name] = {logger, {}};
+    // Create the logger including all parent loggers if they do not exist yet
+    std::vector<std::string> logger_parts = splitLoggerName(full_logger_name);
+    std::string current_logger_name;
+    std::shared_ptr<spdlog::logger> parent_logger;
+    for (size_t i = 0; i < logger_parts.size(); ++i)
+    {
+      current_logger_name += (i == 0 ? "" : SPDLOG_ROS_LOGGER_DELIMITER) + logger_parts[i];
+
+      const auto current_logger_it = logger_map_.find(current_logger_name);
+      if (current_logger_it == logger_map_.end())
+      {
+        const auto current_logger = createAsyncLogger(
+          getLoggerNameFromFullName(current_logger_name), {}, add_default_sinks);
+        spdlog::initialize_logger(current_logger);
+        // If a child logger level is unset, it should inherit the level from its parent logger
+        // Note that the info level is considered the "unset" level for child loggers since this is the default level
+        // for spdlog if not set otherwise:
+        // https://github.com/gabime/spdlog/blob/8e5613379f5140fefb0b60412fbf1f5406e7c7f8/include/spdlog/details/registry.h#L114
+        // https://github.com/gabime/spdlog/blob/8e5613379f5140fefb0b60412fbf1f5406e7c7f8/include/spdlog/cfg/helpers-inl.h#L81
+        if (parent_logger && current_logger->level() == spdlog::level::info)
+        {
+          current_logger->set_level(parent_logger->level());
+        }
+
+        logger_map_[current_logger_name] = {current_logger, {}};
+      }
+
+      parent_logger = logger_map_[current_logger_name].logger;
+    }
+
+    logger = parent_logger;
   }
 
   return logger;
@@ -206,7 +285,7 @@ std::shared_ptr<spdlog::logger> LoggerManager::getLoggerNoLock(
 bool LoggerManager::setLoggerLevel(const std::string& name, spdlog::level::level_enum level)
 {
   const std::lock_guard<std::mutex> lock(logger_map_mutex_);
-  
+
   const auto logger_search_it = logger_map_.find(name);
   if (logger_search_it != logger_map_.end())
   {
@@ -230,6 +309,16 @@ bool LoggerManager::setLoggerLevel(const std::string& name, spdlog::level::level
     {
       location_it->enabled = logger_search_it->second.logger->should_log(location_it->level);
     }
+
+    return true;
+  }
+  else
+  {
+    // Logger with the given name not found -> create it and set the default value such that later when it is actually
+    // used, the logger will have the correct level
+    const auto logger = getLoggerNoLock(
+      getLoggerNameFromFullName(name), true, true);
+    logger->set_level(level);
 
     return true;
   }
