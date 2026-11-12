@@ -41,9 +41,19 @@ TEST_F(LoggerManagerTest, getFullLoggerName)
 
 TEST_F(LoggerManagerTest, getLoggerNameFromFullName)
 {
+  // Get the logger name based on the full logger name (full_logger_name = base_logger_name + "." + logger_name)
+  // For the set up logging manager from the test suite, the base logger name is "spdlog_ros_test"
+
+  // The base logger name is contained and just stripped from the full logger name
   EXPECT_EQ("alpha.beta", manager_->getLoggerNameFromFullName("spdlog_ros_test.alpha.beta"));
+
+  // The full logger name is just the base logger name with no additional logger name so an empty string is returned
   EXPECT_EQ("", manager_->getLoggerNameFromFullName("spdlog_ros_test"));
+
+  // The full logger name does not contain the base logger name, so it is returned as is
   EXPECT_EQ("unrelated.logger", manager_->getLoggerNameFromFullName("unrelated.logger"));
+
+  // The full logger name contains a similar prefix but is not the base logger name, so it is returned as is
   EXPECT_EQ("spdlog_ros_testing.logger", manager_->getLoggerNameFromFullName("spdlog_ros_testing.logger"));
 }
 
